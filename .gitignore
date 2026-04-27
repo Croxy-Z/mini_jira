@@ -36,3 +36,6 @@
 # Ignore IDE files
 .idea/
 *.iml
+
+# Ignore kamal
+.kamal/
