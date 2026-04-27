@@ -30,6 +30,13 @@
 
 /public/assets
 
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Tests
+/coverage
+
 # Ignore key files for decrypting credentials and more.
 /config/*.key
 
