@@ -16,3 +16,17 @@ Style/StringLiterals:
 
 Style/Documentation:
   Enabled: false
+
+Metrics/BlockLength:
+  Exclude:
+    - 'config/environments/**/*'
+    - 'config/routes.rb'
+    - 'db/migrate/**/*'
+
+Layout/LineLength:
+  Exclude:
+    - 'config/initializers/devise.rb'
+
+Rails/BulkChangeTable:
+  Exclude:
+    - 'db/migrate/**/*'
