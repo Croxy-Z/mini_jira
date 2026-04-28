@@ -30,3 +30,6 @@ Layout/LineLength:
 Rails/BulkChangeTable:
   Exclude:
     - 'db/migrate/**/*'
+
+Rails/I18nLocaleTexts:
+  Enabled: false
