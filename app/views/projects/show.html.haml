@@ -1,0 +1,14 @@
+%p
+  %strong Title:
+  = @project.title
+%p
+  %strong Description:
+  = @project.description
+%p
+  %strong Owner:
+  = @project.user.email
+
+- if policy(@project).edit?
+  = link_to 'Edit', edit_project_path(@project)
+  |
+= link_to 'Back to projects', projects_path

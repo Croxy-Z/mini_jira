@@ -1,0 +1,28 @@
+%h1 Projects
+
+%table
+  %thead
+    %tr
+      %th Title
+      %th Description
+      %th Owner
+      %th Actions
+  %tbody
+    - @projects.each do |project|
+      %tr
+        %td= project.title
+        %td= project.description
+        %td= project.user.email
+        %td
+          = link_to "Show", project
+          - if policy(project).edit?
+            = link_to "Edit", edit_project_path(project)
+          - if policy(project).destroy?
+            = button_to "Destroy", project, method: :delete, data: { turbo_confirm: "Are you sure?" }
+
+%br/
+
+- if policy(Project).new?
+  = link_to "New Project", new_project_path
+
+= link_to "Dashboard", root_path
