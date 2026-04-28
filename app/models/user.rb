@@ -8,4 +8,6 @@ class User < ApplicationRecord
 
   # Roles
   enum :role, { user: 0, manager: 1, admin: 2 }
+
+  has_many :projects, dependent: :destroy
 end
