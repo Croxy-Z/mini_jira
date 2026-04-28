@@ -1,4 +1,6 @@
 %h1 Mini Jira Dashboard
 %p Welcome, #{current_user.email}!
 
+= link_to "My Projects", projects_path
+
 = button_to "Logout", destroy_user_session_path, method: :delete
