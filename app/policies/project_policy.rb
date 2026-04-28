@@ -31,6 +31,5 @@ class ProjectPolicy < ApplicationPolicy
   end
 
   class Scope < ApplicationPolicy::Scope
-
   end
 end
