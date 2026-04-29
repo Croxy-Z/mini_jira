@@ -1,0 +1,7 @@
+%h1 Edit Task
+
+= render 'form'
+
+= link_to 'Show', project_task_path(@project, @task)
+|
+= link_to 'Back to Project', project_path(@project)

@@ -1,0 +1,13 @@
+%h1= @task.title
+
+%p
+  %strong Status:
+  = @task.status.humanize
+%p
+  %strong Description:
+  = @task.description
+
+- if policy(@task).edit?
+  = link_to 'Edit', edit_project_task_path(@project, @task)
+  |
+= link_to 'Back to Project', project_path(@project)

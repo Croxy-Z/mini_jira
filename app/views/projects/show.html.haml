@@ -12,3 +12,29 @@
   = link_to 'Edit', edit_project_path(@project)
   |
 = link_to 'Back to projects', projects_path
+
+%hr/
+%h3 Tasks
+
+%table
+  %thead
+    %tr
+      %th Title
+      %th Status
+      %th Actions
+  %tbody
+    - @project.tasks.each do |task|
+      %tr
+        %td= task.title
+        %td= task.status.humanize
+        %td
+          = link_to 'Show', project_task_path(@project, task)
+          - if policy(task).edit?
+            = link_to 'Edit', edit_project_task_path(@project, task)
+          - if policy(task).destroy?
+            = button_to 'Destroy', project_task_path(@project, task), method: :delete, data: { turbo_confirm: 'Are you sure?' }
+
+%br/
+
+- if policy(Task.new(project: @project)).create?
+  = link_to 'New Task', new_project_task_path(@project)
