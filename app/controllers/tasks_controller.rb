@@ -22,7 +22,7 @@ class TasksController < ApplicationController
     authorize @task
 
     if @task.save
-      redirect_to project_path(@project), notice: "Task was successfully created."
+      redirect_to project_path(@project), notice: t(".success")
     else
       render :new, status: :unprocessable_content
     end
@@ -32,7 +32,7 @@ class TasksController < ApplicationController
     authorize @task
 
     if @task.update(task_params)
-      redirect_to project_path(@project), notice: "Task was successfully updated."
+      redirect_to project_path(@project), notice: t(".success")
     else
       render :edit, status: :unprocessable_content
     end
@@ -42,7 +42,7 @@ class TasksController < ApplicationController
     authorize @task
 
     @task.destroy
-    redirect_to project_path(@project), notice: "Task was successfully deleted."
+    redirect_to project_path(@project), notice: t(".success")
   end
 
   private

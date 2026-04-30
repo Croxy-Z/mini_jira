@@ -27,7 +27,7 @@ class ProjectsController < ApplicationController
     authorize @project
 
     if @project.save
-      redirect_to @project, notice: "Project successfully created"
+      redirect_to @project, notice: t(".success")
     else
       render :new, status: :unprocessable_content
     end
@@ -38,7 +38,7 @@ class ProjectsController < ApplicationController
     authorize @project
 
     if @project.update(project_params)
-      redirect_to @project, notice: "Project successfully updated"
+      redirect_to @project, notice: t(".success")
     else
       render :edit, status: :unprocessable_content
     end
@@ -49,7 +49,7 @@ class ProjectsController < ApplicationController
     authorize @project
     @project.destroy
 
-    redirect_to projects_path, notice: "Project successfully deleted"
+    redirect_to projects_path, notice: t(".success")
   end
 
   private

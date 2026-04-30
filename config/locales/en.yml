@@ -28,4 +28,25 @@
 #       enabled: "ON"
 
 en:
-  hello: "Hello world"
+  pundit:
+    unauthorized: "You are not authorized to perform this action."
+
+  user_mailer:
+    welcome_email:
+      subject: "Welcome to Jira Clone!"
+
+  tasks:
+    create:
+      success: "Task was successfully created."
+    update:
+      success: "Task was successfully updated."
+    destroy:
+      success: "Task was successfully deleted."
+
+  projects:
+    create:
+      success: "Project successfully created."
+    update:
+      success: "Project successfully updated."
+    destroy:
+      success: "Project successfully deleted."
