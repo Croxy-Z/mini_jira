@@ -1,28 +1,14 @@
-%h1 Projects
+.flex.justify-between.items-center.mb-8
+  %h1.text-3xl.font-bold.text-gray-900= t('.title', default: 'Projects')
+  = link_to t('.new_project', default: 'New Project'), new_project_path, class: "bg-teal-600 hover:bg-teal-700 text-white font-medium py-2 px-4 rounded-md transition"
 
-%table
-  %thead
-    %tr
-      %th Title
-      %th Description
-      %th Owner
-      %th Actions
-  %tbody
+- if @projects.any?
+  .grid.grid-cols-1.md:grid-cols-2.lg:grid-cols-3.gap-6
     - @projects.each do |project|
-      %tr
-        %td= project.title
-        %td= project.description
-        %td= project.user.email
-        %td
-          = link_to "Show", project
-          - if policy(project).edit?
-            = link_to "Edit", edit_project_path(project)
-          - if policy(project).destroy?
-            = button_to "Destroy", project, method: :delete, data: { turbo_confirm: "Are you sure?" }
-
-%br/
-
-- if policy(Project).new?
-  = link_to "New Project", new_project_path
-  |
-= link_to "Dashboard", root_path
+      = render project
+- else
+  .bg-white.rounded-lg.shadow-sm.p-12.text-center.border.border-dashed.border-gray-300
+    %h3.text-lg.font-medium.text-gray-900 No projects yet
+    %p.mt-2.text-sm.text-gray-500 Get started by creating your first project.
+    .mt-6
+      = link_to 'Create Project', new_project_path, class: "bg-teal-600 hover:bg-teal-700 text-white font-medium py-2 px-4 rounded-md transition"
