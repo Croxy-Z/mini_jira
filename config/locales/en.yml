@@ -50,3 +50,6 @@ en:
       success: "Project successfully updated."
     destroy:
       success: "Project successfully deleted."
+    index:
+      new_project: "New Project"
+      title: "Projects"

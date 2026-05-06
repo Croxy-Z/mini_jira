@@ -1,11 +1,11 @@
 .flex.justify-between.items-center.mb-8
-  %h1.text-3xl.font-bold.text-gray-900= t('.title', default: 'Projects')
-  = link_to t('.new_project', default: 'New Project'), new_project_path, class: "bg-teal-600 hover:bg-teal-700 text-white font-medium py-2 px-4 rounded-md transition"
+  %h1.text-3xl.font-bold.text-gray-900= t('.title')
+  = link_to t('.new_project'), new_project_path, class: "bg-teal-600 hover:bg-teal-700 text-white font-medium py-2 px-4 rounded-md transition"
 
 - if @projects.any?
   .grid.grid-cols-1.md:grid-cols-2.lg:grid-cols-3.gap-6
     - @projects.each do |project|
-      = render project
+      = render(ProjectCardComponent.new(project: project))
 - else
   .bg-white.rounded-lg.shadow-sm.p-12.text-center.border.border-dashed.border-gray-300
     %h3.text-lg.font-medium.text-gray-900 No projects yet
