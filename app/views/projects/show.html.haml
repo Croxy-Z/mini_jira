@@ -1,40 +1,54 @@
-%p
-  %strong Title:
-  = @project.title
-%p
-  %strong Description:
-  = @project.description
-%p
-  %strong Owner:
-  = @project.user.email
+-# Project header
+.mb-8.flex.items-start.justify-between
+  %div
+    %h1.text-3xl.font-bold.text-gray-900.mb-2= @project.title
+    - if @project.description.present?
+      %p.text-gray-600.max-w-3xl= @project.description
 
-- if policy(@project).edit?
-  = link_to 'Edit', edit_project_path(@project)
-  |
-= link_to 'Back to projects', projects_path
+  .flex.space-x-3.shrink-0
+    = link_to 'Edit Project', edit_project_path(@project), class: "bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-2 px-4 rounded-md transition"
+    = link_to 'Back to Projects', projects_path, class: "bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-md transition"
 
-%hr/
-%h3 Tasks
+-# Control panel
+.mb-6.flex.items-center.justify-between.border-b.border-gray-200.pb-4
+  %h2.text-xl.font-semibold.text-gray-800 Kanban Board
+  = link_to 'Add Task', '#', class: "bg-teal-700 hover:bg-teal-800 text-white text-sm font-medium py-2 px-4 rounded-md transition shadow-sm"
 
-%table
-  %thead
-    %tr
-      %th Title
-      %th Status
-      %th Actions
-  %tbody
-    - @project.tasks.each do |task|
-      %tr
-        %td= task.title
-        %td= task.status.humanize
-        %td
-          = link_to 'Show', project_task_path(@project, task)
-          - if policy(task).edit?
-            = link_to 'Edit', edit_project_task_path(@project, task)
-          - if policy(task).destroy?
-            = button_to 'Destroy', project_task_path(@project, task), method: :delete, data: { turbo_confirm: 'Are you sure?' }
+-# Kanban Board
+.grid.grid-cols-1.md:grid-cols-3.gap-6.items-start
 
-%br/
+  -# Column 1: TO DO
+  .bg-gray-50.rounded-lg.p-4.border.border-gray-200
+    .flex.items-center.justify-between.mb-4
+      %h3.font-semibold.text-gray-700.uppercase.text-xs.tracking-wider To Do
+      %span.bg-gray-200.text-gray-700.text-xs.font-bold.px-2.py-1.rounded-full= @project.tasks.to_do.count
+    .flex.flex-col.space-y-3
+      - if @project.tasks.to_do.any?
+        = render @project.tasks.to_do
+      - else
+        .bg-transparent.border-2.border-dashed.border-gray-300.rounded.p-4.text-center.text-sm.text-gray-500
+          No tasks yet
 
-- if policy(Task.new(project: @project)).create?
-  = link_to 'New Task', new_project_task_path(@project)
+  -# Column 2: IN PROGRESS
+  .bg-gray-50.rounded-lg.p-4.border.border-gray-200
+    .flex.items-center.justify-between.mb-4
+      %h3.font-semibold.text-blue-600.uppercase.text-xs.tracking-wider In Progress
+      %span.bg-blue-100.text-blue-700.text-xs.font-bold.px-2.py-1.rounded-full= @project.tasks.in_progress.count
+    .flex.flex-col.space-y-3
+      - if @project.tasks.in_progress.any?
+        = render @project.tasks.in_progress
+      - else
+        .bg-transparent.border-2.border-dashed.border-gray-300.rounded.p-4.text-center.text-sm.text-gray-500
+          No tasks yet
+
+  -# Column 3: DONE
+  .bg-gray-50.rounded-lg.p-4.border.border-gray-200
+    .flex.items-center.justify-between.mb-4
+      %h3.font-semibold.text-green-600.uppercase.text-xs.tracking-wider Done
+      %span.bg-green-100.text-green-700.text-xs.font-bold.px-2.py-1.rounded-full= @project.tasks.done.count
+    .flex.flex-col.space-y-3
+      - if @project.tasks.done.any?
+        = render @project.tasks.done
+      - else
+        .bg-transparent.border-2.border-dashed.border-gray-300.rounded.p-4.text-center.text-sm.text-gray-500
+          No tasks yet
