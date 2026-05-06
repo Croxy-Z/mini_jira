@@ -1,0 +1,9 @@
+%div{ id: "#{dom_id task}", class: "bg-white p-3 rounded shadow-sm border border-gray-200 cursor-grab hover:border-teal-500 hover:shadow transition-all group" }
+  %p.text-sm.font-medium.text-gray-900.mb-2
+    = task.title
+
+  .flex.items-center.justify-between.mt-2
+    %span.text-xs.text-gray-400= "#{task.description}"
+
+    .flex.space-x-2.opacity-0.group-hover:opacity-100.transition-opacity
+      = link_to 'Edit', edit_project_task_path(@project, task), class: "text-xs font-medium text-gray-400 hover:text-teal-600"
