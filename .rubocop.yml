@@ -32,3 +32,9 @@ Layout/LineLength:
 Rails/BulkChangeTable:
   Exclude:
     - 'db/migrate/**/*'
+
+Rails/Exit:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
