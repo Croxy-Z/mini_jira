@@ -1,35 +1,50 @@
 # frozen_string_literal: true
 
 class ProjectPolicy < ApplicationPolicy
-  # Who can see own projects?
   def index?
     user.present?
   end
 
-  # Who can see specific project?
   def show?
-    record.user_id == user.id || user.admin?
+    owner? || admin?
   end
 
-  # Who can create projects?
   def create?
-    user.manager? || user.admin?
+    user.present?
   end
 
   def new?
     create?
   end
 
-  # Who can update projects?
   def update?
-    record.user_id == user.id || user.admin?
+    owner? || admin?
   end
 
-  # Who can destroy projects?
+  def edit?
+    update?
+  end
+
   def destroy?
-    record.user_id == user.id || user.admin?
+    owner? || admin?
   end
 
   class Scope < ApplicationPolicy::Scope
+    def resolve
+      return scope.none unless user
+      return scope.all if user.admin?
+
+      scope.where(user: user)
+    end
+  end
+
+  private
+
+  def owner?
+    record.user_id == user.id
+  end
+
+  def admin?
+    user.admin?
   end
 end

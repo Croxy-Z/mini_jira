@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 class ProjectsController < ApplicationController
-  # User sees only own projects, admin sees all
+  before_action :set_project, only: %i[show edit update destroy]
+
   def index
-    @projects = current_user.admin? ? Project.all : current_user.projects
-    authorize @projects
+    @projects = policy_scope(Project)
+    authorize Project
   end
 
   def show
-    @project = Project.find(params[:id])
     authorize @project
   end
 
@@ -18,7 +18,6 @@ class ProjectsController < ApplicationController
   end
 
   def edit
-    @project = Project.find(params[:id])
     authorize @project
   end
 
@@ -34,7 +33,6 @@ class ProjectsController < ApplicationController
   end
 
   def update
-    @project = Project.find(params[:id])
     authorize @project
 
     if @project.update(project_params)
@@ -45,7 +43,6 @@ class ProjectsController < ApplicationController
   end
 
   def destroy
-    @project = Project.find(params[:id])
     authorize @project
     @project.destroy
 
@@ -53,6 +50,10 @@ class ProjectsController < ApplicationController
   end
 
   private
+
+  def set_project
+    @project = policy_scope(Project).find(params[:id])
+  end
 
   def project_params
     params.expect(project: %i[title description])
