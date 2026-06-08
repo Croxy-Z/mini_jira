@@ -52,7 +52,7 @@ class ProjectsController < ApplicationController
   private
 
   def set_project
-    @project = policy_scope(Project).find(params[:id])
+    @project = policy_scope(Project).find(params.expect(:id))
   end
 
   def project_params

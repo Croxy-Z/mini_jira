@@ -48,11 +48,11 @@ class TasksController < ApplicationController
   private
 
   def set_project
-    @project = policy_scope(Project).find(params[:project_id])
+    @project = policy_scope(Project).find(params.expect(:project_id))
   end
 
   def set_task
-    @task = @project.tasks.find(params[:id])
+    @task = @project.tasks.find(params.expect(:id))
   end
 
   def task_params
