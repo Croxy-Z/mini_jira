@@ -223,10 +223,96 @@ RSpec.describe "Projects" do
         end.not_to change(Project, :count)
       end
 
-      it "returns an unprocessable entity response" do
+      it "returns an unprocessable content response" do
         post projects_path, params: { project: project_params }
 
         expect(response).to have_http_status(:unprocessable_content)
+      end
+    end
+  end
+
+  describe "PATCH /projects/:id" do
+    context "when user is not authenticated" do
+      let(:project) { create(:project, title: "Old title") }
+      let(:project_params) { attributes_for(:project, title: "Updated title") }
+
+      it "does not update the project" do
+        patch project_path(project), params: { project: project_params }
+
+        expect(project.reload.title).to eq("Old title")
+      end
+
+      it "redirects to the sign in page" do
+        patch project_path(project), params: { project: project_params }
+
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    context "when user owns the project" do
+      let(:user) { create(:user) }
+      let(:project) { create(:project, user:) }
+      let(:project_params) { attributes_for(:project, title: "Updated title") }
+
+      before do
+        sign_in user
+      end
+
+      it "updates the project" do
+        patch project_path(project), params: { project: project_params }
+
+        expect(project.reload.title).to eq("Updated title")
+      end
+
+      it "redirects to the updated project" do
+        patch project_path(project), params: { project: project_params }
+
+        expect(response).to redirect_to(project_path(project))
+      end
+    end
+
+    context "when params are invalid" do
+      let(:user) { create(:user) }
+      let(:project) { create(:project, user:, title: "Old title") }
+      let(:invalid_project_params) { attributes_for(:project, title: "") }
+
+      before do
+        sign_in user
+      end
+
+      it "does not update the project" do
+        patch project_path(project), params: { project: invalid_project_params }
+
+        expect(project.reload.title).to eq("Old title")
+      end
+
+      it "returns an unprocessable content response" do
+        patch project_path(project), params: { project: invalid_project_params }
+
+        expect(response).to have_http_status(:unprocessable_content)
+      end
+    end
+
+    context "when user does not own the project" do
+      let(:user) { create(:user) }
+      let(:other_user) { create(:user) }
+      let(:other_project) { create(:project, user: other_user, title: "Old title") }
+      let(:project_params) { attributes_for(:project, title: "Updated title") }
+
+      before do
+        sign_in user
+      end
+
+      it "returns a not found response" do
+        patch project_path(other_project), params: { project: project_params }
+
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it "does not update the project" do
+        patch project_path(other_project), params: { project: project_params }
+
+        expect(other_project.reload.title).to eq("Old title")
       end
     end
   end
