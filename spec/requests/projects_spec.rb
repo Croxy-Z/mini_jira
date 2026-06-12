@@ -316,4 +316,65 @@ RSpec.describe "Projects" do
       end
     end
   end
+
+  describe "DELETE /projects/:id" do
+    context "when user is not authenticated" do
+      let!(:project) { create(:project) }
+
+      it "does not destroy the project" do
+        expect do
+          delete project_path(project)
+        end.not_to change(Project, :count)
+      end
+
+      it "redirects to the sign in page" do
+        delete project_path(project)
+
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    context "when user owns the project" do
+      let(:user) { create(:user) }
+      let!(:project) { create(:project, user:) }
+
+      before do
+        sign_in user
+      end
+
+      it "destroys the project" do
+        expect do
+          delete project_path(project)
+        end.to change(Project, :count).by(-1)
+      end
+
+      it "redirects to the projects page" do
+        delete project_path(project)
+
+        expect(response).to redirect_to(projects_path)
+      end
+    end
+
+    context "when user does not own the project" do
+      let(:user) { create(:user) }
+      let(:other_user) { create(:user) }
+      let!(:other_project) { create(:project, user: other_user) }
+
+      before do
+        sign_in user
+      end
+
+      it "does not destroy the project" do
+        expect do
+          delete project_path(other_project)
+        end.not_to change(Project, :count)
+      end
+
+      it "returns a not found response" do
+        delete project_path(other_project)
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
 end
