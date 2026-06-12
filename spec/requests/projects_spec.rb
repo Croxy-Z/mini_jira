@@ -92,6 +92,79 @@ RSpec.describe "Projects" do
     end
   end
 
+  describe "GET /projects/new" do
+    context "when user is not authenticated" do
+      it "redirects to the sign in page" do
+        get new_project_path
+
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    context "when user is authenticated" do
+      let(:user) { create(:user) }
+
+      before do
+        sign_in user
+      end
+
+      it "returns a successful response" do
+        get new_project_path
+
+        expect(response).to have_http_status(:ok)
+      end
+    end
+  end
+
+  describe "GET /projects/:id/edit" do
+    context "when user is not authenticated" do
+      let(:project) { create(:project) }
+
+      it "redirects to the sign in page" do
+        get edit_project_path(project)
+
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    context "when user owns the project" do
+      let(:user) { create(:user) }
+      let(:project) { create(:project, user:) }
+
+      before do
+        sign_in user
+      end
+
+      it "returns a successful response" do
+        get edit_project_path(project)
+
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "renders the project edit page" do
+        get edit_project_path(project)
+
+        expect(response.body).to include(project.title)
+      end
+    end
+
+    context "when user does not own the project" do
+      let(:user) { create(:user) }
+      let(:other_user) { create(:user) }
+      let(:other_project) { create(:project, user: other_user) }
+
+      before do
+        sign_in user
+      end
+
+      it "returns a not found response" do
+        get edit_project_path(other_project)
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
   describe "POST /projects" do
     context "when user is not authenticated" do
       let(:project_params) { attributes_for(:project) }
