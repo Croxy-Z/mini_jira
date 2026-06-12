@@ -199,17 +199,17 @@ RSpec.describe "Projects" do
       it "assigns the created project to the current user" do
         post projects_path, params: { project: project_params }
 
-        expect(Project.last.user).to eq(user)
+        expect(Project.last!.user).to eq(user)
       end
 
       it "redirects to the created project" do
         post projects_path, params: { project: project_params }
 
-        expect(response).to redirect_to(project_path(Project.last))
+        expect(response).to redirect_to(project_path(Project.last!))
       end
     end
 
-    context "when params are invalid" do
+    context "when user is authenticated and params are invalid" do
       let(:user) { create(:user) }
       let(:project_params) { attributes_for(:project, title: "") }
 
