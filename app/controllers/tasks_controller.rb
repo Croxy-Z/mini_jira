@@ -25,7 +25,10 @@ class TasksController < ApplicationController
     @task = result.task
 
     if result.success?
-      redirect_to project_path(@project), notice: t(".success")
+      respond_to do |format|
+        format.html { redirect_to project_path(@project), notice: t(".success") }
+        format.turbo_stream
+      end
     else
       render :new, status: :unprocessable_content
     end

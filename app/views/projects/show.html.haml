@@ -24,12 +24,13 @@
   .bg-gray-50.rounded-lg.p-4.border.border-gray-200
     .flex.items-center.justify-between.mb-4
       %h3.font-semibold.text-gray-700.uppercase.text-xs.tracking-wider To Do
-      %span.bg-gray-200.text-gray-700.text-xs.font-bold.px-2.py-1.rounded-full= @project.tasks.to_do.count
-    .flex.flex-col.space-y-3
+      %span.bg-gray-200.text-gray-700.text-xs.font-bold.px-2.py-1.rounded-full{ id: "tasks_to_do_count" }
+        = @project.tasks.to_do.count
+    .flex.flex-col.space-y-3{ id: "tasks_to_do" }
       - if @project.tasks.to_do.any?
         = render @project.tasks.to_do
       - else
-        .bg-transparent.border-2.border-dashed.border-gray-300.rounded.p-4.text-center.text-sm.text-gray-500
+        .bg-transparent.border-2.border-dashed.border-gray-300.rounded.p-4.text-center.text-sm.text-gray-500{ id: "tasks_to_do_empty_state" }
           No tasks yet
 
   -# Column 2: IN PROGRESS
