@@ -1,5 +1,6 @@
-%h1 New Task for #{@project.title}
+= turbo_frame_tag "modal" do
+  %h1 New Task for #{@project.title}
 
-= render 'form'
+  = render "form"
 
-= link_to 'Back to Project', project_path(@project)
+  = link_to "Back to Project", project_path(@project), data: { turbo_frame: "_top" }
