@@ -34,7 +34,7 @@ class TasksController < ApplicationController
   def update
     authorize @task
 
-    if @task.update(task_params)
+    if @task.update(task_update_params)
       redirect_to project_path(@project), notice: t(".success")
     else
       render :edit, status: :unprocessable_content
@@ -59,6 +59,10 @@ class TasksController < ApplicationController
   end
 
   def task_params
+    params.expect(task: %i[title description])
+  end
+
+  def task_update_params
     params.expect(task: %i[title description status])
   end
 end

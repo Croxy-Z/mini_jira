@@ -16,10 +16,11 @@
     %br/
     = f.text_area :description
 
-  %div
-    = f.label :status
-    %br/
-    = f.select :status, Task.statuses.keys.map { |status| [status.humanize, status] }
+  - if @task.persisted?
+    %div
+      = f.label :status
+      %br/
+      = f.select :status, Task.statuses.keys.map { |status| [status.humanize, status] }
 
   %div
     = f.submit
