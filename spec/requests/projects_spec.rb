@@ -172,6 +172,7 @@ RSpec.describe "Projects" do
     context "when user is authenticated" do
       let(:user) { create(:user) }
       let(:project_params) { attributes_for(:project) }
+      let(:other_user) { create(:user) }
 
       before do
         sign_in user
@@ -188,6 +189,20 @@ RSpec.describe "Projects" do
           expect(created_project.user).to eq(user)
           expect(response).to redirect_to(project_path(created_project))
         end
+      end
+
+      it "ignores submitted user_id and assigns the project to the current user" do
+        expect do
+          post projects_path, params: {
+            project: {
+              title: "Secure Project",
+              description: "Should belong to current user",
+              user_id: other_user.id
+            }
+          }
+        end.to change(Project, :count).by(1)
+
+        expect(Project.last!.user).to eq(user)
       end
     end
 

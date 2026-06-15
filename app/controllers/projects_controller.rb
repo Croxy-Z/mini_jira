@@ -25,7 +25,10 @@ class ProjectsController < ApplicationController
     @project = current_user.projects.build(project_params)
     authorize @project
 
-    if @project.save
+    result = Projects::Create.call(user: current_user, params: project_params)
+    @project = result.project
+
+    if result.success?
       redirect_to @project, notice: t(".success")
     else
       render :new, status: :unprocessable_content
