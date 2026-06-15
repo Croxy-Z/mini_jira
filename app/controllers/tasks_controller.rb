@@ -21,7 +21,10 @@ class TasksController < ApplicationController
     @task = @project.tasks.build(task_params)
     authorize @task
 
-    if @task.save
+    result = Tasks::Create.call(project: @project, params: task_params)
+    @task = result.task
+
+    if result.success?
       redirect_to project_path(@project), notice: t(".success")
     else
       render :new, status: :unprocessable_content
