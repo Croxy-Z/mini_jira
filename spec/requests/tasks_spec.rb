@@ -165,6 +165,7 @@ RSpec.describe "Tasks" do
       let(:user) { create(:user) }
       let(:project) { create(:project, user:) }
       let(:task_params) { attributes_for(:task, title: "New task") }
+      let(:task_params_with_status) { attributes_for(:task, status: "done") }
 
       before do
         sign_in user
@@ -180,6 +181,15 @@ RSpec.describe "Tasks" do
         aggregate_failures do
           expect(created_task.project).to eq(project)
           expect(created_task.title).to eq("New task")
+          expect(response).to redirect_to(project_path(project))
+        end
+      end
+
+      it "creates a new task with the default status even when status param is provided" do
+        post project_tasks_path(project), params: { task: task_params_with_status }
+
+        aggregate_failures do
+          expect(Task.last!).to be_to_do
           expect(response).to redirect_to(project_path(project))
         end
       end
