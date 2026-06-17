@@ -25,6 +25,22 @@ services:
     depends_on:
       - db
 
+  test:
+    profiles:
+      - test
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: bash
+    volumes:
+      - .:/app
+    environment:
+      RAILS_ENV: test
+      DB_HOST: db
+      DB_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      - db
+
   maildev:
     image: maildev/maildev
     ports:
