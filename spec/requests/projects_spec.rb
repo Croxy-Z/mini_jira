@@ -158,11 +158,9 @@ RSpec.describe "Projects" do
 
   describe "POST /projects" do
     context "when user is not authenticated" do
-      let(:project_params) { attributes_for(:project) }
-
       it "does not create a project and redirects to the sign in page" do
         expect do
-          post projects_path, params: { project: project_params }
+          post projects_path, params: { project: attributes_for(:project) }
         end.not_to change(Project, :count)
 
         expect(response).to redirect_to(new_user_session_path)
@@ -171,16 +169,16 @@ RSpec.describe "Projects" do
 
     context "when user is authenticated" do
       let(:user) { create(:user) }
-      let(:project_params) { attributes_for(:project) }
       let(:other_user) { create(:user) }
 
       before do
         sign_in user
       end
 
-      it "creates a project assigned to the current user and redirects to it" do
+      it "creates a project assigned to the current user and redirects to it when params are valid" do
         expect do
-          post projects_path, params: { project: project_params }
+          post projects_path,
+               params: { project: attributes_for(:project) }
         end.to change(Project, :count).by(1)
 
         created_project = Project.last!
@@ -193,30 +191,23 @@ RSpec.describe "Projects" do
 
       it "ignores submitted user_id and assigns the project to the current user" do
         expect do
-          post projects_path, params: {
-            project: {
-              title: "Secure Project",
-              description: "Should belong to current user",
-              user_id: other_user.id
-            }
-          }
+          post projects_path,
+               params: {
+                 project: {
+                   title: "Secure Project",
+                   description: "Should belong to current user",
+                   user_id: other_user.id
+                 }
+               }
         end.to change(Project, :count).by(1)
 
         expect(Project.last!.user).to eq(user)
       end
-    end
 
-    context "when user is authenticated and params are invalid" do
-      let(:user) { create(:user) }
-      let(:project_params) { attributes_for(:project, title: "") }
-
-      before do
-        sign_in user
-      end
-
-      it "does not create a project and returns an unprocessable content response" do
+      it "does not create a project and returns an unprocessable content response when params are invalid" do
         expect do
-          post projects_path, params: { project: project_params }
+          post projects_path,
+               params: { project: attributes_for(:project, title: "") }
         end.not_to change(Project, :count)
 
         expect(response).to have_http_status(:unprocessable_content)
@@ -227,10 +218,9 @@ RSpec.describe "Projects" do
   describe "PATCH /projects/:id" do
     context "when user is not authenticated" do
       let(:project) { create(:project, title: "Old title") }
-      let(:project_params) { attributes_for(:project, title: "Updated title") }
 
       it "does not update the project and redirects to the sign in page" do
-        patch project_path(project), params: { project: project_params }
+        patch project_path(project), params: { project: attributes_for(:project, title: "Updated title") }
 
         aggregate_failures do
           expect(project.reload.title).to eq("Old title")
@@ -242,33 +232,24 @@ RSpec.describe "Projects" do
     context "when user owns the project" do
       let(:user) { create(:user) }
       let(:project) { create(:project, user:, title: "Old title") }
-      let(:project_params) { attributes_for(:project, title: "Updated title") }
 
       before do
         sign_in user
       end
 
-      it "updates the project and redirects to it" do
-        patch project_path(project), params: { project: project_params }
+      it "updates the project and redirects to it when params are valid" do
+        patch project_path(project),
+              params: { project: attributes_for(:project, title: "Updated title") }
 
         aggregate_failures do
           expect(project.reload.title).to eq("Updated title")
           expect(response).to redirect_to(project_path(project))
         end
       end
-    end
 
-    context "when user owns the project and params are invalid" do
-      let(:user) { create(:user) }
-      let(:project) { create(:project, user:, title: "Old title") }
-      let(:invalid_project_params) { attributes_for(:project, title: "") }
-
-      before do
-        sign_in user
-      end
-
-      it "does not update the project and returns an unprocessable content response" do
-        patch project_path(project), params: { project: invalid_project_params }
+      it "does not update the project and returns an unprocessable content response when params are invalid" do
+        patch project_path(project),
+              params: { project: attributes_for(:project, title: "") }
 
         aggregate_failures do
           expect(project.reload.title).to eq("Old title")
@@ -281,14 +262,13 @@ RSpec.describe "Projects" do
       let(:user) { create(:user) }
       let(:other_user) { create(:user) }
       let(:other_project) { create(:project, user: other_user, title: "Old title") }
-      let(:project_params) { attributes_for(:project, title: "Updated title") }
 
       before do
         sign_in user
       end
 
       it "does not update the project and returns a not found response" do
-        patch project_path(other_project), params: { project: project_params }
+        patch project_path(other_project), params: { project: attributes_for(:project, title: "Updated title") }
 
         aggregate_failures do
           expect(other_project.reload.title).to eq("Old title")
