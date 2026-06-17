@@ -13,6 +13,10 @@ class TaskPolicy < ApplicationPolicy
     owner? || admin?
   end
 
+  def move?
+    update?
+  end
+
   def edit?
     update?
   end

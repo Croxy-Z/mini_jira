@@ -311,6 +311,78 @@ RSpec.describe "Tasks" do
     end
   end
 
+  describe "PATCH /projects/:project_id/tasks/:id/move" do
+    context "when user is not authenticated" do
+      let(:project) { create(:project) }
+      let(:task) { create(:task, project:, status: :to_do) }
+
+      it "does not move the task" do
+        patch move_project_task_path(project, task),
+              params: { task: { status: "done" } },
+              as: :json
+
+        aggregate_failures do
+          expect(task.reload).to be_to_do
+          expect(response).to have_http_status(:unauthorized)
+        end
+      end
+    end
+
+    context "when user owns the project" do
+      let(:user) { create(:user) }
+      let(:project) { create(:project, user:) }
+      let(:task) { create(:task, project:, status: :to_do) }
+
+      before do
+        sign_in user
+      end
+
+      it "moves the task when status is valid" do
+        patch move_project_task_path(project, task),
+              params: { task: { status: "done" } },
+              as: :json
+
+        aggregate_failures do
+          expect(task.reload).to be_done
+          expect(response).to have_http_status(:ok)
+        end
+      end
+
+      it "does not move the task when status is invalid" do
+        patch move_project_task_path(project, task),
+              params: { task: { status: "archived" } },
+              as: :json
+
+        aggregate_failures do
+          expect(task.reload).to be_to_do
+          expect(response).to have_http_status(:unprocessable_content)
+        end
+      end
+    end
+
+    context "when user does not own the project" do
+      let(:user) { create(:user) }
+      let(:other_user) { create(:user) }
+      let(:other_project) { create(:project, user: other_user) }
+      let(:task) { create(:task, project: other_project, status: :to_do) }
+
+      before do
+        sign_in user
+      end
+
+      it "does not move the task" do
+        patch move_project_task_path(other_project, task),
+              params: { task: { status: "done" } },
+              as: :json
+
+        aggregate_failures do
+          expect(task.reload).to be_to_do
+          expect(response).to have_http_status(:not_found)
+        end
+      end
+    end
+  end
+
   describe "DELETE /projects/:project_id/tasks/:id" do
     context "when user is not authenticated" do
       let!(:project) { create(:project) }
