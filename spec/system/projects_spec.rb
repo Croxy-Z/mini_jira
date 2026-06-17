@@ -30,5 +30,23 @@ RSpec.describe "Projects" do
         expect(page).to have_no_content("New task for #{project.title}")
       end
     end
+
+    it "shows validation errors inside the turbo modal" do
+      visit project_path(project)
+
+      click_link "Add Task"
+
+      fill_in "Description", with: "Description without title"
+
+      expect do
+        click_button "Create Task"
+      end.not_to change(Task, :count)
+
+      aggregate_failures do
+        expect(page).to have_content("New task for #{project.title}")
+        expect(page).to have_content("Title can't be blank")
+        expect(page).to have_css("turbo-frame#modal")
+      end
+    end
   end
 end
