@@ -26,7 +26,7 @@
       %h3.font-semibold.text-gray-700.uppercase.text-xs.tracking-wider To Do
       %span.bg-gray-200.text-gray-700.text-xs.font-bold.px-2.py-1.rounded-full{ id: "tasks_to_do_count" }
         = @project.tasks.to_do.count
-    .flex.flex-col.space-y-3{ id: "tasks_to_do" }
+    .flex.flex-col.space-y-3{ id: "tasks_to_do", data: { status: "to_do" } }
       - if @project.tasks.to_do.any?
         = render @project.tasks.to_do
       - else
@@ -37,24 +37,26 @@
   .bg-gray-50.rounded-lg.p-4.border.border-gray-200
     .flex.items-center.justify-between.mb-4
       %h3.font-semibold.text-blue-600.uppercase.text-xs.tracking-wider In Progress
-      %span.bg-blue-100.text-blue-700.text-xs.font-bold.px-2.py-1.rounded-full= @project.tasks.in_progress.count
-    .flex.flex-col.space-y-3
+      %span.bg-blue-100.text-blue-700.text-xs.font-bold.px-2.py-1.rounded-full{ id: "tasks_in_progress_count" }
+        = @project.tasks.in_progress.count
+    .flex.flex-col.space-y-3{ id: "tasks_in_progress", data: { status: "in_progress" } }
       - if @project.tasks.in_progress.any?
         = render @project.tasks.in_progress
       - else
-        .bg-transparent.border-2.border-dashed.border-gray-300.rounded.p-4.text-center.text-sm.text-gray-500
+        .bg-transparent.border-2.border-dashed.border-gray-300.rounded.p-4.text-center.text-sm.text-gray-500{ id: "tasks_in_progress_empty_state" }
           No tasks yet
 
   -# Column 3: DONE
   .bg-gray-50.rounded-lg.p-4.border.border-gray-200
     .flex.items-center.justify-between.mb-4
       %h3.font-semibold.text-green-600.uppercase.text-xs.tracking-wider Done
-      %span.bg-green-100.text-green-700.text-xs.font-bold.px-2.py-1.rounded-full= @project.tasks.done.count
-    .flex.flex-col.space-y-3
+      %span.bg-green-100.text-green-700.text-xs.font-bold.px-2.py-1.rounded-full{ id: "tasks_done_count" }
+        = @project.tasks.done.count
+    .flex.flex-col.space-y-3{ id: "tasks_done", data: { status: "done" } }
       - if @project.tasks.done.any?
         = render @project.tasks.done
       - else
-        .bg-transparent.border-2.border-dashed.border-gray-300.rounded.p-4.text-center.text-sm.text-gray-500
+        .bg-transparent.border-2.border-dashed.border-gray-300.rounded.p-4.text-center.text-sm.text-gray-500{ id: "tasks_done_empty_state" }
           No tasks yet
 
 = turbo_frame_tag "modal"
