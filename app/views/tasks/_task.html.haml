@@ -1,4 +1,6 @@
-%div{ id: "#{dom_id task}", class: "bg-white p-3 rounded shadow-sm border border-gray-200 cursor-grab hover:border-teal-500 hover:shadow transition-all group" }
+%div{ id: dom_id(task),
+      class: "bg-white p-3 rounded shadow-sm border border-gray-200 cursor-grab hover:border-teal-500 hover:shadow transition-all group",
+      data: { task_id: task.id, move_url: move_project_task_path(@project, task) } }
   %p.text-sm.font-medium.text-gray-900.mb-2
     = task.title
 
