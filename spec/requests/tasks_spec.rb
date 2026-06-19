@@ -304,6 +304,9 @@ RSpec.describe "Tasks" do
       let(:user) { create(:user) }
       let(:project) { create(:project, user:) }
       let(:task) { create(:task, project:, status: :to_do) }
+      let(:other_user) { create(:user) }
+      let(:other_project) { create(:project, user: other_user) }
+      let(:other_task) { create(:task, project: other_project, status: :to_do) }
 
       before do
         sign_in user
@@ -328,6 +331,17 @@ RSpec.describe "Tasks" do
         aggregate_failures do
           expect(task.reload).to be_to_do
           expect(response).to have_http_status(:unprocessable_content)
+        end
+      end
+
+      it "does not move a task from another project even when project_id belongs to the user" do
+        patch move_project_task_path(project, other_task),
+              params: { task: { status: "done" } },
+              as: :json
+
+        aggregate_failures do
+          expect(other_task.reload).to be_to_do
+          expect(response).to have_http_status(:not_found)
         end
       end
     end
