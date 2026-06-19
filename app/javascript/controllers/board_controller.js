@@ -88,7 +88,7 @@ export default class extends Controller {
 
         if (!counter) return
 
-        counter.textContent = this.taskCards(column).length
+        counter.textContent = this.taskCards(column).length.toString()
     }
 
     updateColumnEmptyState(column) {
@@ -104,6 +104,6 @@ export default class extends Controller {
     }
 
     get csrfToken() {
-        return document.querySelector("meta[name='csrf-token']").content
+        return document.querySelector("meta[name='csrf-token']")?.content || ""
     }
 }
