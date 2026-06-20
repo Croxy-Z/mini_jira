@@ -21,8 +21,7 @@ class TasksController < ApplicationController
     @task = @project.tasks.build(task_params)
     authorize @task
 
-    result = Tasks::Create.call(project: @project, params: task_params)
-    @task = result.task
+    result = Tasks::Create.call(task: @task)
 
     if result.success?
       respond_to do |format|
