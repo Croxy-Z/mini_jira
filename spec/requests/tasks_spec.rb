@@ -238,6 +238,8 @@ RSpec.describe "Tasks" do
       let(:user) { create(:user) }
       let(:project) { create(:project, user:) }
       let(:task) { create(:task, project:, title: "Old title") }
+      let(:other_user) { create(:user) }
+      let(:other_project) { create(:project, user: other_user) }
 
       before do
         sign_in user
@@ -248,6 +250,17 @@ RSpec.describe "Tasks" do
 
         aggregate_failures do
           expect(task.reload.title).to eq("Updated title")
+          expect(response).to redirect_to(project_path(project))
+        end
+      end
+
+      it "does not change the task project when project_id param is provided" do
+        patch project_task_path(project, task),
+              params: { task: { title: "Updated title", project_id: other_project.id } }
+
+        aggregate_failures do
+          expect(task.reload.title).to eq("Updated title")
+          expect(task.project).to eq(project)
           expect(response).to redirect_to(project_path(project))
         end
       end
