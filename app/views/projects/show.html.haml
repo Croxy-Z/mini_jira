@@ -27,7 +27,10 @@
       %span.bg-gray-200.text-gray-700.text-xs.font-bold.px-2.py-1.rounded-full{ id: "tasks_to_do_count" }
         = @project.tasks.to_do.count
     .flex.flex-col.space-y-3{ id: "tasks_to_do", data: { status: "to_do" } }
-      = render @project.tasks.to_do
+      = render partial: "tasks/task",
+         collection: @project.tasks.to_do,
+         as: :task,
+         locals: { project: @project }
 
       .bg-transparent.border-2.border-dashed.border-gray-300.rounded.p-4.text-center.text-sm.text-gray-500{ id: "tasks_to_do_empty_state", hidden: @project.tasks.to_do.any? }
         No tasks yet
@@ -39,7 +42,10 @@
       %span.bg-blue-100.text-blue-700.text-xs.font-bold.px-2.py-1.rounded-full{ id: "tasks_in_progress_count" }
         = @project.tasks.in_progress.count
     .flex.flex-col.space-y-3{ id: "tasks_in_progress", data: { status: "in_progress" } }
-      = render @project.tasks.in_progress
+      = render partial: "tasks/task",
+         collection: @project.tasks.in_progress,
+         as: :task,
+         locals: { project: @project }
 
       .bg-transparent.border-2.border-dashed.border-gray-300.rounded.p-4.text-center.text-sm.text-gray-500{ id: "tasks_in_progress_empty_state", hidden: @project.tasks.in_progress.any? }
         No tasks yet
@@ -51,7 +57,10 @@
       %span.bg-green-100.text-green-700.text-xs.font-bold.px-2.py-1.rounded-full{ id: "tasks_done_count" }
         = @project.tasks.done.count
     .flex.flex-col.space-y-3{ id: "tasks_done", data: { status: "done" } }
-      = render @project.tasks.done
+      = render partial: "tasks/task",
+         collection: @project.tasks.done,
+         as: :task,
+         locals: { project: @project }
 
       .bg-transparent.border-2.border-dashed.border-gray-300.rounded.p-4.text-center.text-sm.text-gray-500{ id: "tasks_done_empty_state", hidden: @project.tasks.done.any? }
         No tasks yet
