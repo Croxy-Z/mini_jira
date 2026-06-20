@@ -25,8 +25,7 @@ class ProjectsController < ApplicationController
     @project = current_user.projects.build(project_params)
     authorize @project
 
-    result = Projects::Create.call(user: current_user, params: project_params)
-    @project = result.project
+    result = Projects::Create.call(project: @project)
 
     if result.success?
       redirect_to @project, notice: t(".success")
