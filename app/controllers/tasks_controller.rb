@@ -51,7 +51,7 @@ class TasksController < ApplicationController
     if result.success?
       render json: { status: result.task.status }, status: :ok
     else
-      render json: { error: result.error }, status: :unprocessable_content
+      render json: { error: result.error_code, messages: result.errors }, status: :unprocessable_content
     end
   end
 
