@@ -1,4 +1,4 @@
-import { Controller } from "@hotwired/stimulus"
+import {Controller} from "@hotwired/stimulus"
 import Sortable from "sortablejs"
 
 // Connects to data-controller="board"
@@ -54,7 +54,9 @@ export default class extends Controller {
             })
 
             if (!response.ok) {
-                console.error("Failed to move task", await response.json())
+                const errorData = await this.parseErrorResponse(response)
+
+                console.error("Failed to move task", errorData)
                 this.rollback(taskCard, oldColumn, oldIndex)
                 this.refreshColumns(oldColumn, event.to)
                 return
@@ -67,6 +69,14 @@ export default class extends Controller {
             console.error("Failed to move task", error)
             this.rollback(taskCard, oldColumn, oldIndex)
             this.refreshColumns(oldColumn, event.to)
+        }
+    }
+
+    async parseErrorResponse(response) {
+        try {
+            return await response.json()
+        } catch (_error) {
+            return {error: "unexpected_response", messages: []}
         }
     }
 
