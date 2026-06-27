@@ -4,35 +4,31 @@ require "rails_helper"
 
 RSpec.describe Projects::Create do
   describe ".call" do
-    subject(:result) { described_class.call(user:, params:) }
+    subject(:result) { described_class.call(project:) }
 
     let(:user) { create(:user) }
-    let(:params) { { title: "My Project", description: "Test description" } }
 
     context "when params are valid" do
+      let(:project) { build(:project, user:) }
+
       it "creates a project" do
-        expect do
-          described_class.call(user:, params:)
-        end.to change(Project, :count).by(1)
+        expect { described_class.call(project:) }.to change(Project, :count).by(1)
       end
 
       it "returns a successful result with the created project" do
         aggregate_failures do
           expect(result).to be_success
           expect(result.project).to be_persisted
-          expect(result.project.title).to eq("My Project")
           expect(result.project.user).to eq(user)
         end
       end
     end
 
     context "when params are invalid" do
-      let(:params) { { title: "", description: "Test description" } }
+      let(:project) { build(:project, user:, title: "") }
 
       it "does not create a project" do
-        expect do
-          described_class.call(user:, params:)
-        end.not_to change(Project, :count)
+        expect { described_class.call(project:) }.not_to change(Project, :count)
       end
 
       it "returns a failed result with project errors" do

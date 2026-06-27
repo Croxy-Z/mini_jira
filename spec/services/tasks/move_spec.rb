@@ -19,7 +19,8 @@ RSpec.describe Tasks::Move do
         aggregate_failures do
           expect(result).to be_success
           expect(result.task).to eq(task)
-          expect(result.error).to be_nil
+          expect(result.error_code).to be_nil
+          expect(result.errors).to be_empty
         end
       end
     end
@@ -35,7 +36,8 @@ RSpec.describe Tasks::Move do
         aggregate_failures do
           expect(result).not_to be_success
           expect(result.task).to eq(task)
-          expect(result.error).to eq(:invalid_status)
+          expect(result.error_code).to eq(:invalid_status)
+          expect(result.errors).to be_empty
         end
       end
     end

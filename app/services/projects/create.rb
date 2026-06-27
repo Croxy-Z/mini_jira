@@ -4,21 +4,18 @@ module Projects
   class Create
     Result = Struct.new(:success?, :project, keyword_init: true)
 
-    def self.call(user:, params:)
-      new(user:, params:).call
+    def self.call(project:)
+      new(project:).call
     end
 
-    def initialize(user:, params:)
-      @user = user
-      @params = params
+    def initialize(project:)
+      @project = project
     end
 
     def call
-      project = @user.projects.build(@params)
+      @project.save
 
-      project.save
-
-      Result.new(success?: project.persisted?, project:)
+      Result.new(success?: @project.persisted?, project: @project)
     end
   end
 end

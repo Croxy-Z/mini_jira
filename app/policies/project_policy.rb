@@ -41,10 +41,10 @@ class ProjectPolicy < ApplicationPolicy
   private
 
   def owner?
-    record.user_id == user.id
+    user.present? && record.user_id == user.id
   end
 
   def admin?
-    user.admin?
+    user.present? && user.admin?
   end
 end

@@ -15,7 +15,16 @@ class ApplicationController < ActionController::Base
   private
 
   def user_not_authorized
-    flash[:alert] = t("pundit.unauthorized")
-    redirect_to(request.referer || root_path)
+    respond_to do |format|
+      format.html do
+        flash[:alert] = t("pundit.unauthorized")
+        redirect_to(request.referer || root_path)
+      end
+
+      format.json do
+        render json: { error: "forbidden", messages: [t("pundit.unauthorized")] },
+               status: :forbidden
+      end
+    end
   end
 end

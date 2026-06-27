@@ -2,7 +2,7 @@
 
 module Tasks
   class Move
-    Result = Struct.new(:success?, :task, :error, keyword_init: true)
+    Result = Struct.new(:success?, :task, :error_code, :errors, keyword_init: true)
 
     def self.call(task:, new_status:)
       new(task:, new_status:).call
@@ -14,15 +14,13 @@ module Tasks
     end
 
     def call
-      return failure(:invalid_status) unless valid_status?
+      return failure(error_code: :invalid_status) unless valid_status?
 
       task.status = new_status
 
-      Result.new(
-        success?: task.save,
-        task:,
-        error: task.errors.full_messages.presence
-      )
+      return success if task.save
+
+      failure(error_code: :validation_failed, errors: task.errors.full_messages)
     end
 
     private
@@ -33,8 +31,12 @@ module Tasks
       Task.statuses.key?(new_status)
     end
 
-    def failure(error)
-      Result.new(success?: false, task:, error:)
+    def success
+      Result.new(success?: true, task:, error_code: nil, errors: [])
+    end
+
+    def failure(error_code:, errors: [])
+      Result.new(success?: false, task:, error_code:, errors:)
     end
   end
 end

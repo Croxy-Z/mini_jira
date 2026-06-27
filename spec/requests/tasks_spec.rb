@@ -238,6 +238,8 @@ RSpec.describe "Tasks" do
       let(:user) { create(:user) }
       let(:project) { create(:project, user:) }
       let(:task) { create(:task, project:, title: "Old title") }
+      let(:other_user) { create(:user) }
+      let(:other_project) { create(:project, user: other_user) }
 
       before do
         sign_in user
@@ -248,6 +250,17 @@ RSpec.describe "Tasks" do
 
         aggregate_failures do
           expect(task.reload.title).to eq("Updated title")
+          expect(response).to redirect_to(project_path(project))
+        end
+      end
+
+      it "does not change the task project when project_id param is provided" do
+        patch project_task_path(project, task),
+              params: { task: { title: "Updated title", project_id: other_project.id } }
+
+        aggregate_failures do
+          expect(task.reload.title).to eq("Updated title")
+          expect(task.project).to eq(project)
           expect(response).to redirect_to(project_path(project))
         end
       end
@@ -304,6 +317,9 @@ RSpec.describe "Tasks" do
       let(:user) { create(:user) }
       let(:project) { create(:project, user:) }
       let(:task) { create(:task, project:, status: :to_do) }
+      let(:other_user) { create(:user) }
+      let(:other_project) { create(:project, user: other_user) }
+      let(:other_task) { create(:task, project: other_project, status: :to_do) }
 
       before do
         sign_in user
@@ -314,9 +330,12 @@ RSpec.describe "Tasks" do
               params: { task: { status: "done" } },
               as: :json
 
+        body = response.parsed_body
+
         aggregate_failures do
           expect(task.reload).to be_done
           expect(response).to have_http_status(:ok)
+          expect(body).to eq("status" => "done")
         end
       end
 
@@ -325,9 +344,26 @@ RSpec.describe "Tasks" do
               params: { task: { status: "archived" } },
               as: :json
 
+        body = response.parsed_body
+
         aggregate_failures do
           expect(task.reload).to be_to_do
           expect(response).to have_http_status(:unprocessable_content)
+          expect(body).to eq(
+                            "error" => "invalid_status",
+                            "messages" => []
+                          )
+        end
+      end
+
+      it "does not move a task from another project even when project_id belongs to the user" do
+        patch move_project_task_path(project, other_task),
+              params: { task: { status: "done" } },
+              as: :json
+
+        aggregate_failures do
+          expect(other_task.reload).to be_to_do
+          expect(response).to have_http_status(:not_found)
         end
       end
     end

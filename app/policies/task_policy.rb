@@ -37,10 +37,10 @@ class TaskPolicy < ApplicationPolicy
   private
 
   def owner?
-    record.project.user_id == user.id
+    user.present? && record.project.user_id == user.id
   end
 
   def admin?
-    user.admin?
+    user.present? && user.admin?
   end
 end

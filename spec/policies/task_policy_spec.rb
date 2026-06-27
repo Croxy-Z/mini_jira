@@ -10,7 +10,7 @@ RSpec.describe TaskPolicy do
   let(:task) { build_stubbed(:task, project:) }
 
   describe "owner/admin actions" do
-    let(:actions) { %i[show create edit update destroy] }
+    let(:actions) { %i[show create edit update move destroy] }
 
     context "when user owns the task project" do
       let(:user) { owner }

@@ -21,8 +21,7 @@ class TasksController < ApplicationController
     @task = @project.tasks.build(task_params)
     authorize @task
 
-    result = Tasks::Create.call(project: @project, params: task_params)
-    @task = result.task
+    result = Tasks::Create.call(task: @task)
 
     if result.success?
       respond_to do |format|
@@ -52,7 +51,7 @@ class TasksController < ApplicationController
     if result.success?
       render json: { status: result.task.status }, status: :ok
     else
-      render json: { error: result.error }, status: :unprocessable_content
+      render json: { error: result.error_code, messages: result.errors }, status: :unprocessable_content
     end
   end
 
