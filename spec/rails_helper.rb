@@ -35,6 +35,7 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
   config.include Devise::Test::IntegrationHelpers, type: :request
   config.include Devise::Test::IntegrationHelpers, type: :system
+  config.include ViewComponent::TestHelpers, type: :component
 
   config.use_transactional_fixtures = true
   config.filter_rails_from_backtrace!
