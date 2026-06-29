@@ -10,6 +10,8 @@ class ProjectsController < ApplicationController
 
   def show
     authorize @project
+
+    @tasks_by_status = @project.tasks.order(:created_at).group_by(&:status)
   end
 
   def new

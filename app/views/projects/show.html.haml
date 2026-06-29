@@ -1,3 +1,7 @@
+- to_do_tasks = @tasks_by_status.fetch("to_do", [])
+- in_progress_tasks = @tasks_by_status.fetch("in_progress", [])
+- done_tasks = @tasks_by_status.fetch("done", [])
+
 -# Project header
 .mb-8.flex.items-start.justify-between
   %div
@@ -25,10 +29,10 @@
     .flex.items-center.justify-between.mb-4
       %h3.font-semibold.text-gray-700.uppercase.text-xs.tracking-wider To Do
       %span.bg-gray-200.text-gray-700.text-xs.font-bold.px-2.py-1.rounded-full{ id: "tasks_to_do_count" }
-        = @project.tasks.to_do.count
+        = to_do_tasks.count
     .flex.flex-col.space-y-3{ id: "tasks_to_do", data: { status: "to_do" } }
       = render partial: "tasks/task",
-         collection: @project.tasks.to_do,
+         collection: to_do_tasks,
          as: :task,
          locals: { project: @project }
 
@@ -40,10 +44,10 @@
     .flex.items-center.justify-between.mb-4
       %h3.font-semibold.text-blue-600.uppercase.text-xs.tracking-wider In Progress
       %span.bg-blue-100.text-blue-700.text-xs.font-bold.px-2.py-1.rounded-full{ id: "tasks_in_progress_count" }
-        = @project.tasks.in_progress.count
+        = in_progress_tasks.count
     .flex.flex-col.space-y-3{ id: "tasks_in_progress", data: { status: "in_progress" } }
       = render partial: "tasks/task",
-         collection: @project.tasks.in_progress,
+         collection: in_progress_tasks,
          as: :task,
          locals: { project: @project }
 
@@ -55,10 +59,10 @@
     .flex.items-center.justify-between.mb-4
       %h3.font-semibold.text-green-600.uppercase.text-xs.tracking-wider Done
       %span.bg-green-100.text-green-700.text-xs.font-bold.px-2.py-1.rounded-full{ id: "tasks_done_count" }
-        = @project.tasks.done.count
+        = done_tasks.count
     .flex.flex-col.space-y-3{ id: "tasks_done", data: { status: "done" } }
       = render partial: "tasks/task",
-         collection: @project.tasks.done,
+         collection: done_tasks,
          as: :task,
          locals: { project: @project }
 
