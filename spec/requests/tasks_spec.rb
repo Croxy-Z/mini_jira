@@ -350,9 +350,9 @@ RSpec.describe "Tasks" do
           expect(task.reload).to be_to_do
           expect(response).to have_http_status(:unprocessable_content)
           expect(body).to eq(
-                            "error" => "invalid_status",
-                            "messages" => []
-                          )
+            "error" => "invalid_status",
+            "messages" => []
+          )
         end
       end
 
