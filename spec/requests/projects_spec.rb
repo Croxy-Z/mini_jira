@@ -17,11 +17,11 @@ RSpec.describe "Projects" do
       let(:other_user) { create(:user) }
 
       let!(:own_project) do
-        create(:project, user:)
+        create(:project, user:, title: "Visible Project")
       end
 
       let!(:other_project) do
-        create(:project, user: other_user)
+        create(:project, user: other_user, title: "Hidden Project")
       end
 
       before do

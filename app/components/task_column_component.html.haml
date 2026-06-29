@@ -1,0 +1,15 @@
+.bg-gray-50.rounded-lg.p-4.border.border-gray-200
+  .flex.items-center.justify-between.mb-4
+    %h3.font-semibold.uppercase.text-xs.tracking-wider{ class: title_class }
+      = title
+    %span.text-xs.font-bold.px-2.py-1.rounded-full{ id: counter_id, class: counter_class }
+      = tasks.count
+
+  .flex.flex-col.space-y-3{ id: column_id, data: { status: status } }
+    = render partial: "tasks/task",
+             collection: tasks,
+             as: :task,
+             locals: { project: project }
+
+    .bg-transparent.border-2.border-dashed.border-gray-300.rounded.p-4.text-center.text-sm.text-gray-500{ id: empty_state_id, hidden: tasks.any? }
+      No tasks yet

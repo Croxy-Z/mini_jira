@@ -1,3 +1,7 @@
+- to_do_tasks = @tasks_by_status.fetch("to_do", [])
+- in_progress_tasks = @tasks_by_status.fetch("in_progress", [])
+- done_tasks = @tasks_by_status.fetch("done", [])
+
 -# Project header
 .mb-8.flex.items-start.justify-between
   %div
@@ -21,48 +25,12 @@
 .grid.grid-cols-1.md:grid-cols-3.gap-6.items-start{ data: { controller: "board" } }
 
   -# Column 1: TO DO
-  .bg-gray-50.rounded-lg.p-4.border.border-gray-200
-    .flex.items-center.justify-between.mb-4
-      %h3.font-semibold.text-gray-700.uppercase.text-xs.tracking-wider To Do
-      %span.bg-gray-200.text-gray-700.text-xs.font-bold.px-2.py-1.rounded-full{ id: "tasks_to_do_count" }
-        = @project.tasks.to_do.count
-    .flex.flex-col.space-y-3{ id: "tasks_to_do", data: { status: "to_do" } }
-      = render partial: "tasks/task",
-         collection: @project.tasks.to_do,
-         as: :task,
-         locals: { project: @project }
-
-      .bg-transparent.border-2.border-dashed.border-gray-300.rounded.p-4.text-center.text-sm.text-gray-500{ id: "tasks_to_do_empty_state", hidden: @project.tasks.to_do.any? }
-        No tasks yet
+  = render TaskColumnComponent.new(title: "To Do", status: "to_do", tasks: to_do_tasks, project: @project)
 
   -# Column 2: IN PROGRESS
-  .bg-gray-50.rounded-lg.p-4.border.border-gray-200
-    .flex.items-center.justify-between.mb-4
-      %h3.font-semibold.text-blue-600.uppercase.text-xs.tracking-wider In Progress
-      %span.bg-blue-100.text-blue-700.text-xs.font-bold.px-2.py-1.rounded-full{ id: "tasks_in_progress_count" }
-        = @project.tasks.in_progress.count
-    .flex.flex-col.space-y-3{ id: "tasks_in_progress", data: { status: "in_progress" } }
-      = render partial: "tasks/task",
-         collection: @project.tasks.in_progress,
-         as: :task,
-         locals: { project: @project }
-
-      .bg-transparent.border-2.border-dashed.border-gray-300.rounded.p-4.text-center.text-sm.text-gray-500{ id: "tasks_in_progress_empty_state", hidden: @project.tasks.in_progress.any? }
-        No tasks yet
+  = render TaskColumnComponent.new(title: "In Progress", status: "in_progress", tasks: in_progress_tasks, project: @project)
 
   -# Column 3: DONE
-  .bg-gray-50.rounded-lg.p-4.border.border-gray-200
-    .flex.items-center.justify-between.mb-4
-      %h3.font-semibold.text-green-600.uppercase.text-xs.tracking-wider Done
-      %span.bg-green-100.text-green-700.text-xs.font-bold.px-2.py-1.rounded-full{ id: "tasks_done_count" }
-        = @project.tasks.done.count
-    .flex.flex-col.space-y-3{ id: "tasks_done", data: { status: "done" } }
-      = render partial: "tasks/task",
-         collection: @project.tasks.done,
-         as: :task,
-         locals: { project: @project }
-
-      .bg-transparent.border-2.border-dashed.border-gray-300.rounded.p-4.text-center.text-sm.text-gray-500{ id: "tasks_done_empty_state", hidden: @project.tasks.done.any? }
-        No tasks yet
+  = render TaskColumnComponent.new(title: "Done", status: "done", tasks: done_tasks, project: @project)
 
 = turbo_frame_tag "modal"
