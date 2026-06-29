@@ -1,6 +1,8 @@
 = turbo_stream.prepend "tasks_to_do", partial: "tasks/task", locals: { task: @task, project: @project }
 
-= turbo_stream.remove "tasks_to_do_empty_state"
+= turbo_stream.replace "tasks_to_do_empty_state",
+                     partial: "tasks/empty_state",
+                     locals: { id: "tasks_to_do_empty_state", hidden: true }
 
 = turbo_stream.update "tasks_to_do_count", @project.tasks.to_do.count
 
