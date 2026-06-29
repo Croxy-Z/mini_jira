@@ -27,6 +27,7 @@ RSpec.describe "Projects" do
       aggregate_failures do
         expect(page).to have_content("Write system spec")
         expect(page).to have_css("#tasks_to_do_count", text: "1")
+        expect(page).to have_css("#tasks_to_do_empty_state", visible: :hidden)
         expect(page).to have_no_content("New task for #{project.title}")
       end
     end

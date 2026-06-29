@@ -11,5 +11,5 @@
              as: :task,
              locals: { project: project }
 
-    .bg-transparent.border-2.border-dashed.border-gray-300.rounded.p-4.text-center.text-sm.text-gray-500{ id: empty_state_id, hidden: tasks.any? }
-      No tasks yet
+    = render partial: "tasks/empty_state",
+         locals: { id: empty_state_id, hidden: tasks.any? }
