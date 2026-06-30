@@ -16,4 +16,10 @@ RSpec.describe User do
       )
     end
   end
+
+  describe "database constraints" do
+    it "does not allow a null role" do
+      expect(described_class.columns_hash["role"].null).to be_falsy
+    end
+  end
 end
