@@ -141,7 +141,7 @@ docker compose run --rm test bin/ci
 On Linux, if Docker creates root-owned files in the project directory, run commands with the current host user:
 
 ```bash
-> docker compose run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp test bundle exec rspec
+docker compose run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp test bundle exec rspec
 ```
 
 ## Project status
