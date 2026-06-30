@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
   before_action :authenticate_user!
+  after_action :verify_pundit_authorization, unless: :devise_controller?
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
@@ -25,6 +26,14 @@ class ApplicationController < ActionController::Base
         render json: { error: "forbidden", messages: [t("pundit.unauthorized")] },
                status: :forbidden
       end
+    end
+  end
+
+  def verify_pundit_authorization
+    if action_name == "index"
+      verify_policy_scoped
+    else
+      verify_authorized
     end
   end
 end
