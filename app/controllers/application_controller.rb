@@ -13,6 +13,12 @@ class ApplicationController < ActionController::Base
   # Changes to the importmap will invalidate the etag for HTML responses
   stale_when_importmap_changes
 
+  protected
+
+  def after_sign_out_path_for(_resource_or_scope)
+    new_user_session_path
+  end
+
   private
 
   def user_not_authorized
