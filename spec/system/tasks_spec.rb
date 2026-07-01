@@ -39,11 +39,22 @@ RSpec.describe "Tasks" do
       end
     end
 
-    it "updates a task from the edit modal" do
+    it "updates a task from the task details modal" do
       visit project_path(project)
 
       within "#task_#{task.id}" do
-        find_link("Edit", visible: :all).click
+        click_link "Open"
+      end
+
+      aggregate_failures do
+        expect(page).to have_css("turbo-frame#modal", text: "Task details")
+        expect(page).to have_css("turbo-frame#modal", text: task.title)
+        expect(page).to have_css("turbo-frame#modal", text: task.description)
+        expect(page).to have_css("turbo-frame#modal", text: task.status.humanize)
+      end
+
+      within "turbo-frame#modal" do
+        click_link "Edit task"
       end
 
       aggregate_failures do
