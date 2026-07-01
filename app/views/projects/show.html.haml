@@ -3,26 +3,44 @@
 - done_tasks = @tasks_by_status.fetch("done", [])
 
 -# Project header
-.mb-8.flex.items-start.justify-between
-  %div
-    %h1.text-3xl.font-bold.text-gray-900.mb-2= @project.title
-    - if @project.description.present?
-      %p.text-gray-600.max-w-3xl= @project.description
+.mb-8.rounded-2xl.border.border-gray-200.bg-white.p-6.shadow-sm
+  .flex.flex-col.gap-5.lg:flex-row.lg:items-start.lg:justify-between
+    %div
+      %p.text-sm.font-medium.text-teal-700
+        Kanban board
 
-  .flex.space-x-3.shrink-0
-    = link_to 'Edit Project', edit_project_path(@project), class: "bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-2 px-4 rounded-md transition"
-    = link_to 'Back to Projects', projects_path, class: "bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-md transition"
+      %h1.mt-1.text-3xl.font-bold.text-gray-900
+        = @project.title
+
+      - if @project.description.present?
+        %p.mt-2.max-w-3xl.text-sm.text-gray-600.leading-relaxed
+          = @project.description
+
+    .flex.flex-wrap.gap-3.shrink-0
+      = link_to "Edit project",
+                edit_project_path(@project),
+                class: "inline-flex items-center rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
+
+      = link_to "Back to projects",
+                projects_path,
+                class: "inline-flex items-center rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
 
 -# Control panel
-.mb-6.flex.items-center.justify-between.border-b.border-gray-200.pb-4
-  %h2.text-xl.font-semibold.text-gray-800 Kanban Board
-  = link_to 'Add Task',
-            new_project_task_path(@project),
-            data: { turbo_frame: "modal" },
-            class: "bg-teal-700 hover:bg-teal-800 text-white text-sm font-medium py-2 px-4 rounded-md transition shadow-sm"
+.mt-6.flex.flex-col.gap-4.border-t.border-gray-200.pt-5.sm:flex-row.sm:items-end.sm:justify-between
+  %div
+    %h2.text-lg.font-semibold.text-gray-900
+      Workflow
+
+    %p.mt-1.text-sm.text-gray-500
+      Move tasks between columns or edit task details directly from the board.
+
+  = link_to "Add task",
+              new_project_task_path(@project),
+              data: { turbo_frame: "modal" },
+              class: "inline-flex items-center justify-center rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teal-700 transition"
 
 -# Kanban Board
-.grid.grid-cols-1.md:grid-cols-3.gap-6.items-start{ data: { controller: "board" } }
+.mt-5.grid.grid-cols-1.md:grid-cols-3.gap-6.items-start{ data: { controller: "board" } }
 
   -# Column 1: TO DO
   = render TaskColumnComponent.new(title: "To Do", status: "to_do", tasks: to_do_tasks, project: @project)
