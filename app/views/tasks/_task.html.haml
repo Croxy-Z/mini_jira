@@ -9,4 +9,7 @@
       = task.description
 
   .mt-3.flex.justify-end.opacity-0.group-hover:opacity-100.transition-opacity
-    = link_to 'Edit', edit_project_task_path(project, task), class: "text-xs font-medium text-gray-500 hover:text-teal-600"
+    = link_to 'Edit',
+              edit_project_task_path(project, task),
+              data: { turbo_frame: "modal" },
+              class: "text-xs font-medium text-gray-500 hover:text-teal-600"

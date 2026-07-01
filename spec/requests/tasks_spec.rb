@@ -273,6 +273,25 @@ RSpec.describe "Tasks" do
           expect(response).to have_http_status(:unprocessable_content)
         end
       end
+
+      it "does not update status through regular task update params" do
+        patch project_task_path(project, task), params: {
+          task: {
+            title: "Updated task title",
+            description: "Updated task description",
+            status: "done"
+          }
+        }
+
+        task.reload
+
+        aggregate_failures do
+          expect(response).to redirect_to(project_path(project))
+          expect(task.title).to eq("Updated task title")
+          expect(task.description).to eq("Updated task description")
+          expect(task.status).to eq("to_do")
+        end
+      end
     end
 
     context "when user does not own the project" do

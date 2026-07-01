@@ -1,7 +1,15 @@
-%h1 Edit Task
+= turbo_frame_tag "modal" do
+  %div{ class: "fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" }
+    .w-full.max-w-lg.rounded-xl.bg-white.shadow-xl.border.border-gray-200
+      .flex.items-start.justify-between.border-b.border-gray-200.px-6.py-4
+        %div
+          %h1.text-xl.font-bold.text-gray-900
+            Edit task
 
-= render 'form'
+        = link_to "×",
+                  project_path(@project),
+                  data: { turbo_frame: "_top" },
+                  class: "text-2xl leading-none text-gray-400 hover:text-gray-700 transition"
 
-= link_to 'Show', project_task_path(@project, @task)
-|
-= link_to 'Back to Project', project_path(@project)
+      .px-6.py-5
+        = render "form"
