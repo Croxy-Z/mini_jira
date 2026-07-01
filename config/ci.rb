@@ -16,6 +16,7 @@ CI.run do
   step "Security: Brakeman code analysis", "bin/brakeman --quiet --no-pager --exit-on-warn --exit-on-error"
   step "Tests: RSpec", "bundle exec rspec"
   step "Tests: Seeds", "bin/rails db:seed:replant"
+  step "Cleanup: Test database", "bin/rails db:drop db:create db:schema:load"
 
   # Optional: Run system tests
   # step "Tests: System", "bin/rails test:system"
