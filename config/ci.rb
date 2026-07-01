@@ -3,7 +3,9 @@
 # Run using bin/ci
 
 CI.run do
-  step "Setup", "bin/setup --skip-server"
+  step "Setup: Dependencies", "bundle check"
+  step "Setup: Test database", "bin/rails db:drop db:create db:schema:load"
+  step "Setup: Cleanup", "bin/rails log:clear tmp:clear"
 
   step "Assets: Tailwind CSS", "bin/rails tailwindcss:build"
 
@@ -13,7 +15,7 @@ CI.run do
   step "Security: Importmap vulnerability audit", "bin/importmap audit"
   step "Security: Brakeman code analysis", "bin/brakeman --quiet --no-pager --exit-on-warn --exit-on-error"
   step "Tests: RSpec", "bundle exec rspec"
-  step "Tests: Seeds", "bin/rails db:prepare db:seed:replant"
+  step "Tests: Seeds", "bin/rails db:seed:replant"
 
   # Optional: Run system tests
   # step "Tests: System", "bin/rails test:system"
