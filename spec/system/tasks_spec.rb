@@ -38,5 +38,30 @@ RSpec.describe "Tasks" do
         expect(page).to have_no_css("#tasks_to_do #task_#{task.id}")
       end
     end
+
+    it "updates a task from the edit modal" do
+      visit project_path(project)
+
+      within "#task_#{task.id}" do
+        find_link("Edit", visible: :all).click
+      end
+
+      aggregate_failures do
+        expect(page).to have_css("turbo-frame#modal", text: "Edit task")
+        expect(page).to have_field("Title", with: "Drag me")
+      end
+
+      within "turbo-frame#modal" do
+        fill_in "Title", with: "Updated task title"
+        fill_in "Description", with: "Updated task description"
+        click_button "Update Task"
+      end
+
+      aggregate_failures do
+        expect(page).to have_css("#tasks_to_do #task_#{task.id}", text: "Updated task title")
+        expect(page).to have_css("#tasks_to_do #task_#{task.id}", text: "Updated task description")
+        expect(page).to have_no_css("turbo-frame#modal", text: "Edit task")
+      end
+    end
   end
 end

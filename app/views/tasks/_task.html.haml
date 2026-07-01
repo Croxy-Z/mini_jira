@@ -4,8 +4,12 @@
   %p.text-sm.font-medium.text-gray-900.mb-2
     = task.title
 
-  .flex.items-center.justify-between.mt-2
-    %span.text-xs.text-gray-400= "#{task.description}"
+  - if task.description.present?
+    %p.mt-2.text-sm.text-gray-600.leading-relaxed
+      = task.description
 
-    .flex.space-x-2.opacity-0.group-hover:opacity-100.transition-opacity
-      = link_to 'Edit', edit_project_task_path(project, task), class: "text-xs font-medium text-gray-400 hover:text-teal-600"
+  .mt-3.flex.justify-end.opacity-0.group-hover:opacity-100.transition-opacity
+    = link_to 'Edit',
+              edit_project_task_path(project, task),
+              data: { turbo_frame: "modal" },
+              class: "text-xs font-medium text-gray-500 hover:text-teal-600"
