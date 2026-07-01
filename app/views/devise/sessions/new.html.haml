@@ -1,15 +1,49 @@
-%h2 Log in
-= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
-  .field
-    %p= f.label :email
-    %p= f.email_field :email, autofocus: true, autocomplete: "email"
-  .field
-    %p= f.label :password
-    %p= f.password_field :password, autocomplete: "current-password"
-  - if devise_mapping.rememberable?
-    .field
-      %p= f.check_box :remember_me
-      %p= f.label :remember_me
-  .actions
-    = f.submit "Log in"
-= render "devise/shared/links"
+.max-w-md.mx-auto.px-4.py-12
+  .rounded-2xl.border.border-gray-200.bg-white.p-8.shadow-sm
+    .text-center
+      %p.text-sm.font-medium.text-teal-700
+        Welcome back
+
+      %h1.mt-2.text-3xl.font-bold.text-gray-900
+        Log in to Mini Jira
+
+      %p.mt-2.text-sm.text-gray-500
+        Open your workspace and continue managing your Kanban boards.
+
+    .mt-6.rounded-lg.border.border-teal-100.bg-teal-50.p-4
+      %p.text-sm.font-semibold.text-teal-800
+        Demo account
+
+      %p.mt-1.text-sm.text-teal-700
+        Email:
+        %span.font-mono demo@example.com
+
+      %p.text-sm.text-teal-700
+        Password:
+        %span.font-mono password123
+
+    = form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "mt-6 space-y-5" }) do |f|
+      .space-y-2
+        = f.label :email, class: "block text-sm font-medium text-gray-700"
+        = f.email_field :email,
+                        autofocus: true,
+                        autocomplete: "email",
+                        class: "block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+
+      .space-y-2
+        = f.label :password, class: "block text-sm font-medium text-gray-700"
+        = f.password_field :password,
+                           autocomplete: "current-password",
+                           class: "block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+
+      - if devise_mapping.rememberable?
+        .flex.items-center.gap-2
+          = f.check_box :remember_me,
+                        class: "h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500"
+          = f.label :remember_me, class: "text-sm text-gray-600"
+
+      = f.submit "Log in",
+                 class: "w-full rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teal-700 transition"
+
+    .mt-6.border-t.border-gray-200.pt-5.text-center.text-sm.text-gray-500
+      = render "devise/shared/links"
