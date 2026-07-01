@@ -111,11 +111,20 @@ MailDev is available at:
 http://localhost:1080
 ```
 
-### Run Rails commands
+## Demo data
+
+To prepare the database and create demo data, run:
 
 ```bash
-docker compose exec web bin/rails db:migrate
+docker compose exec web bin/rails db:prepare db:seed
 ```
+
+Demo account:
+
+- Email: `demo@example.com`
+- Password: `password123`
+
+The seed data creates a demo Kanban project with tasks across all workflow statuses.
 
 ### Run the test suite
 
@@ -157,7 +166,6 @@ Current focus:
 
 Planned next improvements:
 
-- Demo seed data
 - Better README screenshots / GIFs
 - Deployment
 - Background jobs for async notifications
