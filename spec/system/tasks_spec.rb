@@ -74,5 +74,28 @@ RSpec.describe "Tasks" do
         expect(page).to have_no_css("turbo-frame#modal", text: "Edit task")
       end
     end
+
+    it "deletes a task from the task details modal" do
+      visit project_path(project)
+
+      within "#task_#{task.id}" do
+        click_link "Open"
+      end
+
+      expect(page).to have_css("turbo-frame#modal", text: "Task details")
+
+      within "turbo-frame#modal" do
+        accept_confirm "Are you sure you want to delete this task?" do
+          click_button "Delete task"
+        end
+      end
+
+      aggregate_failures do
+        expect(page).to have_no_css("#task_#{task.id}")
+        expect(page).to have_no_css("turbo-frame#modal", text: "Task details")
+        expect(page).to have_css("#tasks_to_do_count", text: "0")
+        expect(page).to have_css("#tasks_to_do_empty_state", text: "No tasks yet")
+      end
+    end
   end
 end
