@@ -11,7 +11,8 @@ RSpec.describe Task do
     let(:project) { create(:project) }
 
     it { is_expected.to validate_presence_of(:title) }
-    it { is_expected.to validate_length_of(:title).is_at_most(255) }
+    it { is_expected.to validate_length_of(:title).is_at_most(160) }
+    it { is_expected.to validate_length_of(:description).is_at_most(2000) }
 
     it "defaults status to to_do at the database level" do
       described_class.insert_all!(
