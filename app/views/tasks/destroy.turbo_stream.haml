@@ -1,0 +1,12 @@
+- column_id = "tasks_#{@task_status}"
+- empty_state_id = "#{column_id}_empty_state"
+
+= turbo_stream.remove dom_id(@task)
+
+= turbo_stream.update "#{column_id}_count", @remaining_tasks_count
+
+= turbo_stream.replace empty_state_id,
+                       partial: "tasks/empty_state",
+                       locals: { id: empty_state_id, hidden: @remaining_tasks_count.positive? }
+
+= turbo_stream.update "modal", ""

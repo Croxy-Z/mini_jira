@@ -61,8 +61,14 @@ class TasksController < ApplicationController
   def destroy
     authorize @task
 
+    @task_status = @task.status
     @task.destroy
-    redirect_to project_path(@project), notice: t(".success")
+    @remaining_tasks_count = @project.tasks.where(status: @task_status).count
+
+    respond_to do |format|
+      format.html { redirect_to project_path(@project), notice: t(".success") }
+      format.turbo_stream
+    end
   end
 
   private
