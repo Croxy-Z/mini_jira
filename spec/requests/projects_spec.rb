@@ -294,6 +294,7 @@ RSpec.describe "Projects" do
     context "when user owns the project" do
       let(:user) { create(:user) }
       let!(:project) { create(:project, user:) }
+      let!(:task) { create(:task, project:) }
 
       before do
         sign_in user
@@ -305,6 +306,14 @@ RSpec.describe "Projects" do
         end.to change(Project, :count).by(-1)
 
         expect(response).to redirect_to(projects_path)
+      end
+
+      it "destroys associated tasks" do
+        expect do
+          delete project_path(project)
+        end.to change(Task, :count).by(-1)
+
+        expect(Task.exists?(task.id)).to be(false)
       end
     end
 
