@@ -8,8 +8,27 @@ RSpec.describe Task do
   end
 
   describe "validations" do
+    let(:project) { create(:project) }
+
     it { is_expected.to validate_presence_of(:title) }
     it { is_expected.to validate_length_of(:title).is_at_most(255) }
+
+    it "defaults status to to_do at the database level" do
+      described_class.insert_all!(
+        [
+          {
+            project_id: project.id,
+            title: "Task with database default",
+            created_at: Time.current,
+            updated_at: Time.current
+          }
+        ]
+      )
+
+      task = described_class.find_by!(title: "Task with database default")
+
+      expect(task.status).to eq("to_do")
+    end
   end
 
   describe "status" do
