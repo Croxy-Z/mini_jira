@@ -1,0 +1,26 @@
+- flash.each do |type, message|
+  - next if message.blank?
+
+  - if type.to_sym == :notice
+    - classes = "border-emerald-200 bg-emerald-50 text-emerald-900"
+    - icon_classes = "bg-emerald-100 text-emerald-700"
+    - icon = "✓"
+  - else
+    - classes = "border-red-200 bg-red-50 text-red-900"
+    - icon_classes = "bg-red-100 text-red-700"
+    - icon = "!"
+
+  %div{ class: "fixed left-1/2 top-20 z-50 w-full max-w-md -translate-x-1/2 px-4",
+        data: { controller: "flash", flash_delay_value: 4000 } }
+    .flex.items-start.gap-3.rounded-xl.border.p-4.shadow-lg{ class: classes }
+      .flex.h-6.w-6.shrink-0.items-center.justify-center.rounded-full.text-sm.font-bold{ class: icon_classes }
+        = icon
+
+      %p.flex-1.text-sm.font-semibold.leading-6
+        = message
+
+      %button{ type: "button",
+               class: "rounded-md px-2 text-lg leading-6 text-current/60 hover:text-current transition cursor-pointer",
+               data: { action: "flash#dismiss" },
+               aria: { label: "Dismiss notification" } }
+        ×

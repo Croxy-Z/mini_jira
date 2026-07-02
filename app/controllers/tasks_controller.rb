@@ -26,7 +26,7 @@ class TasksController < ApplicationController
     if result.success?
       respond_to do |format|
         format.html { redirect_to project_path(@project), notice: t(".success") }
-        format.turbo_stream
+        format.turbo_stream { flash.now[:notice] = t(".success") }
       end
     else
       render :new, status: :unprocessable_content
@@ -39,7 +39,7 @@ class TasksController < ApplicationController
     if @task.update(task_params)
       respond_to do |format|
         format.html { redirect_to project_path(@project), notice: t(".success") }
-        format.turbo_stream
+        format.turbo_stream { flash.now[:notice] = t(".success") }
       end
     else
       render :edit, status: :unprocessable_content
@@ -67,7 +67,7 @@ class TasksController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to project_path(@project), notice: t(".success") }
-      format.turbo_stream
+      format.turbo_stream { flash.now[:notice] = t(".success") }
     end
   end
 
