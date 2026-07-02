@@ -39,6 +39,31 @@ RSpec.describe "Tasks" do
       end
     end
 
+    it "creates a task from the turbo modal" do
+      visit project_path(project)
+
+      click_link "Add Task"
+
+      aggregate_failures do
+        expect(page).to have_css("turbo-frame#modal", text: "New task")
+        expect(page).to have_field("Title")
+        expect(page).to have_field("Description")
+      end
+
+      within "turbo-frame#modal" do
+        fill_in "Title", with: "New turbo task"
+        fill_in "Description", with: "Created from the task modal"
+        click_button "Create Task"
+      end
+
+      aggregate_failures do
+        expect(page).to have_css("#tasks_to_do", text: "New turbo task")
+        expect(page).to have_css("#tasks_to_do", text: "Created from the task modal")
+        expect(page).to have_no_css("turbo-frame#modal", text: "New task")
+        expect(page).to have_css("#flash", text: "Task was successfully created.")
+      end
+    end
+
     it "updates a task from the task details modal" do
       visit project_path(project)
 
@@ -71,6 +96,7 @@ RSpec.describe "Tasks" do
       aggregate_failures do
         expect(page).to have_css("#tasks_to_do #task_#{task.id}", text: "Updated task title")
         expect(page).to have_css("#tasks_to_do #task_#{task.id}", text: "Updated task description")
+        expect(page).to have_css("#flash", text: "Task was successfully updated.")
         expect(page).to have_no_css("turbo-frame#modal", text: "Edit task")
       end
     end
@@ -94,6 +120,7 @@ RSpec.describe "Tasks" do
         expect(page).to have_no_css("#task_#{task.id}")
         expect(page).to have_no_css("turbo-frame#modal", text: "Task details")
         expect(page).to have_css("#tasks_to_do_count", text: "0")
+        expect(page).to have_css("#flash", text: "Task was successfully deleted.")
         expect(page).to have_css("#tasks_to_do_empty_state", text: "No tasks yet")
       end
     end

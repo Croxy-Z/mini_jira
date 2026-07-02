@@ -1,6 +1,8 @@
 - column_id = "tasks_#{@task_status}"
 - empty_state_id = "#{column_id}_empty_state"
 
+= turbo_stream.update "flash", partial: "shared/flash"
+
 = turbo_stream.remove dom_id(@task)
 
 = turbo_stream.update "#{column_id}_count", @remaining_tasks_count
