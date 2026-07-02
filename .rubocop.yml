@@ -47,3 +47,6 @@ Metrics/MethodLength:
 
 Metrics/AbcSize:
   Enabled: false
+
+Rails/SkipsModelValidations:
+  Enabled: false
