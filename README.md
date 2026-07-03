@@ -69,6 +69,21 @@ The goal of this project is not just to implement CRUD, but to demonstrate produ
 - JSON contract for task movement endpoint
 - Responsive Tailwind-based UI
 
+## Architecture decisions
+
+This project intentionally keeps the architecture simple, but separates responsibilities where it improves maintainability, security, or testability.
+
+- Controllers handle HTTP concerns: authentication, authorization, params, redirects, and Turbo responses.
+- Pundit policies and policy scopes protect user-owned resources and reduce IDOR risk.
+- Service objects are used for business operations that may grow later, such as project creation, task creation, and task movement.
+- Result objects make service outcomes explicit and easier to test without relying on controller state.
+- ViewComponents are used for reusable UI pieces where extracting markup improves readability.
+- Hotwire/Turbo is used for modal-based task interactions without introducing a separate frontend framework.
+- Stimulus is used only where client-side behavior is needed, such as moving tasks between Kanban columns.
+- Docker keeps local development, test runs, and CI closer to the same environment.
+
+The goal is not to over-engineer the application, but to show clear boundaries between HTTP, authorization, business logic, UI rendering, and client-side behavior.
+
 ## Security and data protection
 
 Security is one of the main focuses of this project.
