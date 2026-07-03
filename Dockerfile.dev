@@ -3,7 +3,8 @@ FROM ruby:4.0.3
 RUN apt-get update -qq && \
     apt-get install -y --no-install-recommends \
       build-essential \
-      default-mysql-client \
+      postgresql-client \
+      libpq-dev \
       chromium && \
     rm -rf /var/lib/apt/lists/*
 
