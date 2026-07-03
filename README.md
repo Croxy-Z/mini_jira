@@ -4,6 +4,32 @@ Mini Jira is a portfolio Ruby on Rails application inspired by Jira/Trello-style
 
 The goal of this project is not just to implement CRUD, but to demonstrate production-oriented backend and full-stack engineering practices: authentication, authorization, IDOR protection, service objects, request/system tests, Hotwire interactions, ViewComponents, Docker-based development, and CI security checks.
 
+## Demo preview
+
+### Kanban board
+
+![Kanban board](docs/screenshots/project-board.png)
+
+### Workspace dashboard
+
+![Dashboard](docs/screenshots/dashboard.png)
+
+### Task details modal
+
+![Task details modal](docs/screenshots/task-details-modal.png)
+
+### Project settings and danger zone
+
+![Project settings and danger zone](docs/screenshots/project-settings-danger-zone.png)
+
+### Projects overview
+
+![Projects overview](docs/screenshots/projects-index.png)
+
+### Sign in with demo account
+
+![Sign in page](docs/screenshots/sign-in.png)
+
 ## What this project demonstrates
 
 - Ruby on Rails 8 application structure
