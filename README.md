@@ -6,6 +6,10 @@ The goal of this project is not just to implement CRUD, but to demonstrate produ
 
 ## Demo preview
 
+### Task movement demo
+
+![Task movement demo](docs/demo/move-task.gif)
+
 ### Kanban board
 
 ![Kanban board](docs/screenshots/project-board.png)
