@@ -196,8 +196,6 @@ GEM
       drb (~> 2.0)
       prism (~> 1.5)
     msgpack (1.8.3)
-    mysql2 (0.5.7)
-      bigdecimal
     net-imap (0.6.4.1)
       date
       net-protocol
@@ -231,6 +229,11 @@ GEM
     parser (3.3.11.1)
       ast (~> 2.4.1)
       racc
+    pg (1.6.3)
+    pg (1.6.3-aarch64-linux)
+    pg (1.6.3-aarch64-linux-musl)
+    pg (1.6.3-x86_64-linux)
+    pg (1.6.3-x86_64-linux-musl)
     pp (0.6.3)
       prettyprint
     prettyprint (0.2.0)
@@ -481,7 +484,7 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   kamal
-  mysql2 (~> 0.5)
+  pg (~> 1.5)
   propshaft
   puma (>= 5.0)
   pundit

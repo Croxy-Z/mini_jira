@@ -11,7 +11,10 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[8.1].define(version: 2026_07_02_143528) do
-  create_table "projects", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_catalog.plpgsql"
+
+  create_table "projects", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
     t.string "title", null: false
@@ -20,7 +23,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_02_143528) do
     t.index ["user_id"], name: "index_projects_on_user_id"
   end
 
-  create_table "tasks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "tasks", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
     t.bigint "project_id", null: false
@@ -30,7 +33,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_02_143528) do
     t.index ["project_id"], name: "index_tasks_on_project_id"
   end
 
-  create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
