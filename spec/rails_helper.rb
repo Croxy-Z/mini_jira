@@ -8,10 +8,15 @@ raise "The Rails environment is running in production mode!" if Rails.env.produc
 
 require "rspec/rails"
 require "shoulda/matchers"
+require "socket"
 
 ActiveRecord::Migration.maintain_test_schema!
 
-Capybara.register_driver :selenium_chrome_headless_docker do |app|
+Capybara.server_host = "0.0.0.0"
+Capybara.server_port = 3001
+Capybara.app_host = "http://#{IPSocket.getaddress(Socket.gethostname)}:#{Capybara.server_port}"
+
+Capybara.register_driver :selenium_chrome_headless_remote do |app|
   options = Selenium::WebDriver::Chrome::Options.new
 
   options.add_argument("--headless=new")
@@ -20,12 +25,17 @@ Capybara.register_driver :selenium_chrome_headless_docker do |app|
   options.add_argument("--disable-gpu")
   options.add_argument("--window-size=1400,1400")
 
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options:)
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :remote,
+    url: ENV.fetch("SELENIUM_REMOTE_URL", "http://selenium:4444/wd/hub"),
+    options:
+  )
 end
 
 RSpec.configure do |config|
   config.before(:each, type: :system) do
-    driven_by :selenium_chrome_headless_docker
+    driven_by :selenium_chrome_headless_remote
   end
 
   config.fixture_paths = [
