@@ -22,4 +22,12 @@ RSpec.describe User do
       expect(described_class.columns_hash["role"].null).to be_falsy
     end
   end
+
+  describe "welcome email" do
+    it "enqueues welcome email after user creation" do
+      expect do
+        create(:user)
+      end.to have_enqueued_mail(UserMailer, :welcome_email)
+    end
+  end
 end
