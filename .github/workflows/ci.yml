@@ -22,15 +22,5 @@ jobs:
       - name: Build test image
         run: docker compose build test
 
-      - name: Check Chromium
-        run: |
-          docker compose run --rm test chromium --version
-          docker compose run --rm test chromium \
-            --headless=new \
-            --no-sandbox \
-            --disable-dev-shm-usage \
-            --disable-gpu \
-            --dump-dom about:blank
-
       - name: Run CI
         run: docker compose run --rm test bin/ci
