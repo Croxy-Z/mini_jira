@@ -24,10 +24,20 @@ RSpec.describe User do
   end
 
   describe "welcome email" do
+    let(:user) { build(:user) }
+
     it "enqueues welcome email after user creation" do
       expect do
         create(:user)
       end.to have_enqueued_mail(UserMailer, :welcome_email)
+    end
+
+    it "does not enqueue welcome email when skipped" do
+      user.skip_welcome_email = true
+
+      expect do
+        user.save!
+      end.not_to have_enqueued_mail(UserMailer, :welcome_email)
     end
   end
 end
