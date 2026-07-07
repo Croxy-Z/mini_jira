@@ -214,6 +214,55 @@ The same pattern is used by the full local CI command:
 docker compose run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp test bin/ci
 ```
 
+## Deployment readiness
+
+Mini Jira is being prepared for a Dockerized production-style deployment with Kamal.
+
+The intended deployment topology is:
+
+```text
+web container  -> Rails / Puma / HTTP requests
+job container  -> Solid Queue worker / background jobs
+db accessory   -> PostgreSQL
+```
+
+### Current deployment status
+
+The project includes initial Kamal configuration for:
+
+- separate `web` and `job` roles;
+- PostgreSQL as a Kamal accessory;
+- environment-based secrets;
+- Rails healthcheck endpoint;
+- Dockerized application build;
+- background email delivery with Active Job / Solid Queue.
+
+A public demo deployment is planned as the next step. The target is a free or low-cost VPS-style deployment where possible, with a fallback to a PaaS demo if a stable free VPS is not available.
+
+### Required secrets
+
+The following secrets are required for deployment:
+
+```bash
+RAILS_MASTER_KEY=
+DB_PASSWORD=
+```
+
+A safe template is provided in:
+
+```text
+.kamal/secrets.example
+```
+
+Real deployment secrets must be stored locally in `.kamal/secrets` and must not be committed to Git.
+
+### Deployment notes
+
+- PostgreSQL is configured as an internal deployment dependency.
+- The database port should not be publicly exposed.
+- Background jobs are expected to run in a separate `job` role instead of inside the Puma web process.
+- The production database password is provided through environment secrets, not hardcoded configuration.
+
 ## Project status
 
 Current focus:
