@@ -45,6 +45,6 @@ Thumbs.db
 *.iml
 
 # Ignore kamal
-.kamal/
+.kamal/secrets
 /app/assets/builds/*
 !/app/assets/builds/.keep
