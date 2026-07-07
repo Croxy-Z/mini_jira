@@ -1,8 +1,8 @@
-# Mini Jira — SaaS Kanban Board
+# Mini Jira — Rails 8 SaaS Kanban Board
 
 Mini Jira is a portfolio Ruby on Rails application inspired by Jira/Trello-style Kanban workflows.
 
-The goal of this project is not just to implement CRUD, but to demonstrate production-oriented backend and full-stack engineering practices: authentication, authorization, IDOR protection, service objects, request/system tests, Hotwire interactions, ViewComponents, Docker-based development, and CI security checks.
+The goal of this project is not just to implement CRUD, but to demonstrate production-oriented backend and full-stack engineering practices: authentication, authorization, IDOR protection, service objects, request/system tests, Hotwire interactions, ViewComponents, PostgreSQL, Docker-based development, CI security checks, background jobs, and deployment readiness.
 
 ## Demo preview
 
@@ -45,21 +45,28 @@ The goal of this project is not just to implement CRUD, but to demonstrate produ
 - Stimulus-powered task movement between Kanban columns
 - ViewComponent-based UI decomposition
 - Service objects with explicit Result objects
+- PostgreSQL-backed application data
+- Background email delivery with Active Job and Solid Queue
 - RSpec test suite: request, model, policy, service, system, and component specs
+- Remote Selenium setup for stable Docker/CI system specs
 - Docker-based local development and test environment
 - GitHub Actions CI with RSpec, RuboCop, Brakeman, Bundler Audit, and Importmap Audit
+- Kamal-oriented deployment preparation with separate web/job roles and PostgreSQL accessory
 
 ## Tech stack
 
 - Ruby on Rails 8
-- MySQL 8
+- PostgreSQL 16
 - Devise
 - Pundit
 - Hotwire / Turbo / Stimulus
 - ViewComponent
-- Tailwind CSS
+- Tailwind CSS v4
+- Active Job / Solid Queue
+- ActionMailer
 - RSpec / FactoryBot / Capybara / Selenium
 - Docker / Docker Compose
+- Kamal deployment configuration
 - GitHub Actions
 
 ## Features
@@ -80,6 +87,8 @@ The goal of this project is not just to implement CRUD, but to demonstrate produ
 - JSON contract for task movement endpoint
 - Responsive Tailwind-based UI
 - Protection against long user-generated text breaking the layout
+- Welcome email delivery through background jobs
+- Seed-safe demo user creation without unnecessary email jobs
 
 ## Architecture decisions
 
@@ -92,15 +101,18 @@ This project intentionally keeps the architecture simple, but separates responsi
 - ViewComponents are used for reusable UI pieces where extracting markup improves readability.
 - Hotwire/Turbo is used for modal-based task interactions without introducing a separate frontend framework.
 - Stimulus is used only where client-side behavior is needed, such as moving tasks between Kanban columns and dismissing flash messages.
+- Active Job and Solid Queue are used to keep email delivery asynchronous and avoid blocking user-facing requests.
 - Docker keeps local development, test runs, and CI closer to the same environment.
+- System specs use a dedicated Selenium Chrome container instead of running Chromium inside the Rails test container. This separates the test runner from the browser runtime and improves CI stability.
+- Kamal configuration separates the production web process from the background job process.
 
-The goal is not to over-engineer the application, but to show clear boundaries between HTTP, authorization, business logic, UI rendering, and client-side behavior.
+The goal is not to over-engineer the application, but to show clear boundaries between HTTP, authorization, business logic, UI rendering, client-side behavior, background processing, and deployment infrastructure.
 
 ## Testing and quality checks
 
 The project includes multiple layers of automated checks to cover business logic, authorization, UI behavior, and security.
 
-- Model specs for validations, associations, and database-level constraints.
+- Model specs for validations, associations, database-level constraints, and mailer job behavior.
 - Request specs for authentication, authorization, CRUD behavior, invalid params, Turbo responses, and JSON contracts.
 - Policy specs for Pundit access rules and ownership boundaries.
 - Service specs for explicit business operations and Result objects.
@@ -115,7 +127,7 @@ The project includes multiple layers of automated checks to cover business logic
 Run the full local CI pipeline:
 
 ```bash
-docker compose run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp test bin/ci
+docker compose run --rm test bin/ci
 ```
 
 The CI pipeline is designed to verify the demo seeds without polluting the test database before the RSpec suite runs.
@@ -135,6 +147,8 @@ The application protects user data through:
 - Pundit verification safety net for controller actions
 - Brakeman static analysis in CI
 - Bundler Audit and Importmap Audit in CI
+- Environment-based deployment secrets
+- PostgreSQL deployment configuration that avoids exposing the database publicly
 
 Examples of protected scenarios:
 
@@ -202,16 +216,22 @@ docker compose run --rm test bin/ci
 
 ### Linux note
 
-On Linux, if Docker creates root-owned files in the project directory, run commands with the current host user:
+On Linux, Docker can create root-owned files in the project directory if commands are executed as the default container user. The project commands use the current host user and a writable `HOME` directory to keep generated files editable:
 
 ```bash
 docker compose run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp test bundle exec rspec
 ```
 
-The same pattern is used by the full local CI command:
+## System test infrastructure
 
-```bash
-docker compose run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp test bin/ci
+System specs use Capybara with Remote Selenium.
+
+The Docker Compose test setup separates browser automation from the Rails test runner:
+
+```text
+test container      -> RSpec / Capybara / Rails test server
+selenium container  -> Chrome / WebDriver
+db container        -> PostgreSQL
 ```
 
 ## Deployment readiness
@@ -233,7 +253,6 @@ The project includes initial Kamal configuration for:
 - separate `web` and `job` roles;
 - PostgreSQL as a Kamal accessory;
 - environment-based secrets;
-- Rails healthcheck endpoint;
 - Dockerized application build;
 - background email delivery with Active Job / Solid Queue.
 
@@ -272,22 +291,17 @@ Current focus:
 - Hotwire-based task creation, details, editing, and deletion flows
 - Stimulus-based task movement
 - RSpec coverage for core business, security, and UI scenarios
-- Docker-based CI pipeline
+- PostgreSQL-based local/test infrastructure
+- Docker-based CI pipeline with remote Selenium system specs
+- Async mailer delivery with Active Job / Solid Queue
+- Kamal-oriented deployment readiness
 - Portfolio-ready README with screenshots and demo data
 
 Planned next improvements:
 
-- Deployment
-- CI/CD deployment preparation
-- Background jobs for async notifications
+- Public deployment with Kamal + VPS or fallback PaaS demo
 - Basic audit trail for task status changes
-- Optional AI task assistant integration
-
-Not planned for the initial MVP:
-
-- Billing
-- Full public REST API
-- RAG / vector search
-- Complex enterprise permissions
-
-These features may be added later only if they provide clear product value and do not turn the project into an over-engineered demo.
+- Business email notification when a task is moved to Done
+- Optional soft delete for tasks/projects
+- Security and quality polish with Brakeman, Bundler Audit, and Bullet
+- Optional REST API v1 with authentication, policy scopes, JSON errors, and request specs
