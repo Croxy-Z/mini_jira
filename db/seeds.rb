@@ -6,6 +6,7 @@ demo_user.assign_attributes(
   password_confirmation: "password123",
   role: :user
 )
+demo_user.skip_welcome_email = true
 demo_user.save!
 
 demo_projects = [
