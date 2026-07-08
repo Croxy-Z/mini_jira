@@ -306,8 +306,7 @@ Current focus:
 Planned next improvements:
 
 - Public deployment with Kamal + VPS or fallback PaaS demo
-- Basic audit trail for task status changes
 - Business email notification when a task is moved to Done
 - Optional soft delete for tasks/projects
-- Further performance and quality polish based on real project usage.
+- Further performance and quality polish based on real project usage
 - Optional REST API v1 with authentication, policy scopes, JSON errors, and request specs
