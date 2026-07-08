@@ -22,14 +22,7 @@ module Tasks
 
       ActiveRecord::Base.transaction do
         task.update!(status: new_status)
-
-        task.task_activities.create!(
-          user: actor,
-          project: task.project,
-          action: TaskActivity::ACTION_MOVED,
-          from_status:,
-          to_status: new_status
-        )
+        record_activity(from_status:)
       end
 
       success
@@ -51,6 +44,16 @@ module Tasks
 
     def failure(error_code:, errors: [])
       Result.new(success?: false, task:, error_code:, errors:)
+    end
+
+    def record_activity(from_status:)
+      task.task_activities.create!(
+        user: actor,
+        project: task.project,
+        action: TaskActivity::ACTION_MOVED,
+        from_status:,
+        to_status: new_status
+      )
     end
   end
 end
