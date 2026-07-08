@@ -39,6 +39,22 @@ RSpec.describe Tasks::Move do
           expect(result.errors).to be_empty
         end
       end
+
+      it "rolls back the status change when activity creation fails" do
+        invalid_actor = nil
+
+        result = described_class.call(
+          task:,
+          actor: invalid_actor,
+          new_status: "done"
+        )
+
+        aggregate_failures do
+          expect(result).not_to be_success
+          expect(task.reload).to be_to_do
+          expect(TaskActivity.exists?(task:)).to be(false)
+        end
+      end
     end
 
     context "when status is invalid" do
