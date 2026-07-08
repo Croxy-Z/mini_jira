@@ -32,6 +32,27 @@ RSpec.describe "Tasks" do
           expect(response.body).to include(task.title)
         end
       end
+
+      it "renders task activity history" do
+        create(
+          :task_activity,
+          task:,
+          project:,
+          user:,
+          from_status: "to_do",
+          to_status: "done"
+        )
+
+        get project_task_path(project, task)
+
+        aggregate_failures do
+          expect(response).to have_http_status(:ok)
+          expect(response.body).to include("Activity")
+          expect(response.body).to include(user.email)
+          expect(response.body).to include("To do")
+          expect(response.body).to include("Done")
+        end
+      end
     end
 
     context "when user does not own the project" do

@@ -33,6 +33,37 @@
             %p.text-sm.text-gray-400
               No description provided.
 
+        .border-t.border-gray-200.pt-5
+          .flex.items-center.justify-between.gap-3
+            %h2.text-sm.font-semibold.text-gray-900
+              Activity
+
+            %span.text-xs.text-gray-400
+              Latest movements
+
+          - if @task_activities.any?
+            %ol.mt-3.space-y-3
+              - @task_activities.each do |activity|
+                %li.rounded-lg.border.border-gray-200.bg-gray-50.p-3
+                  %p.text-sm.text-gray-700
+                    %span.font-medium.text-gray-900
+                      = activity.user.email
+                    moved this task
+
+                  %p.mt-1.text-sm.text-gray-500
+                    %span.font-mono.text-xs
+                      = activity.from_status.humanize
+                    %span.mx-1
+                      →
+                    %span.font-mono.text-xs
+                      = activity.to_status.humanize
+
+                  %p.mt-1.text-xs.text-gray-400
+                    = "#{time_ago_in_words(activity.created_at)} ago"
+          - else
+            %p.mt-3.text-sm.text-gray-400
+              No activity yet.
+
       .flex.items-center.justify-between.gap-3.border-t.border-gray-200.px-6.py-4
         = button_to "Delete task",
                     project_task_path(@project, @task),
