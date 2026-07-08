@@ -11,7 +11,6 @@ RSpec.describe User do
     it do
       expect(described_class.roles).to eq(
         "user" => 0,
-        "manager" => 1,
         "admin" => 2
       )
     end
