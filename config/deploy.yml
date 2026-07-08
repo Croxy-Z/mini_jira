@@ -45,6 +45,7 @@ env:
     JOB_CONCURRENCY: 1
     DB_HOST: mini_jira-db
     DB_USERNAME: postgres
+    APP_HOST: example.com
 
     # Log everything from Rails
     # RAILS_LOG_LEVEL: debug
