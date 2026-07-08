@@ -41,4 +41,14 @@ RSpec.describe Task do
       )
     end
   end
+
+  describe "counter cache" do
+    let(:project) { create(:project) }
+
+    it "updates project's tasks count" do
+      expect do
+        create(:task, project:)
+      end.to change { project.reload.tasks_count }.from(0).to(1)
+    end
+  end
 end
