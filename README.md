@@ -124,6 +124,7 @@ The project includes multiple layers of automated checks to cover business logic
 - Brakeman for static security analysis.
 - Bundler Audit and Importmap Audit for dependency checks.
 - RuboCop for code style and consistency.
+- Bullet in development for detecting N+1 queries and unnecessary eager loading.
 - Tailwind CSS build verification.
 - Seed validation to ensure the demo dataset stays usable.
 
@@ -308,5 +309,5 @@ Planned next improvements:
 - Basic audit trail for task status changes
 - Business email notification when a task is moved to Done
 - Optional soft delete for tasks/projects
-- Security and quality polish with Brakeman, Bundler Audit, and Bullet
+- Further performance and quality polish based on real project usage.
 - Optional REST API v1 with authentication, policy scopes, JSON errors, and request specs
