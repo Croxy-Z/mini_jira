@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_02_143528) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_08_103302) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -21,6 +21,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_02_143528) do
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_projects_on_user_id"
+  end
+
+  create_table "task_activities", force: :cascade do |t|
+    t.string "action", null: false
+    t.datetime "created_at", null: false
+    t.string "from_status", null: false
+    t.bigint "project_id", null: false
+    t.bigint "task_id", null: false
+    t.string "to_status", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["project_id", "created_at"], name: "index_task_activities_on_project_id_and_created_at"
+    t.index ["project_id"], name: "index_task_activities_on_project_id"
+    t.index ["task_id", "created_at"], name: "index_task_activities_on_task_id_and_created_at"
+    t.index ["task_id"], name: "index_task_activities_on_task_id"
+    t.index ["user_id"], name: "index_task_activities_on_user_id"
   end
 
   create_table "tasks", force: :cascade do |t|
@@ -47,5 +63,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_02_143528) do
   end
 
   add_foreign_key "projects", "users"
+  add_foreign_key "task_activities", "projects"
+  add_foreign_key "task_activities", "tasks"
+  add_foreign_key "task_activities", "users"
   add_foreign_key "tasks", "projects"
 end

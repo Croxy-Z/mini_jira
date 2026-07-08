@@ -320,10 +320,12 @@ RSpec.describe "Tasks" do
       let(:project) { create(:project) }
       let(:task) { create(:task, project:, status: :to_do) }
 
-      it "does not move the task" do
-        patch move_project_task_path(project, task),
-              params: { task: { status: "done" } },
-              as: :json
+      it "does not move the task or create activity" do
+        expect do
+          patch move_project_task_path(project, task),
+                params: { task: { status: "done" } },
+                as: :json
+        end.not_to change(TaskActivity, :count)
 
         aggregate_failures do
           expect(task.reload).to be_to_do
@@ -344,24 +346,35 @@ RSpec.describe "Tasks" do
         sign_in user
       end
 
-      it "moves the task when status is valid" do
-        patch move_project_task_path(project, task),
-              params: { task: { status: "done" } },
-              as: :json
+      it "moves the task and creates activity when status is valid" do
+        expect do
+          patch move_project_task_path(project, task),
+                params: { task: { status: "done" } },
+                as: :json
+        end.to change(TaskActivity, :count).by(1)
 
         body = response.parsed_body
+        activity = TaskActivity.last!
 
         aggregate_failures do
           expect(task.reload).to be_done
           expect(response).to have_http_status(:ok)
           expect(body).to eq("status" => "done")
+
+          expect(activity.user).to eq(user)
+          expect(activity.project).to eq(project)
+          expect(activity.task).to eq(task)
+          expect(activity.from_status).to eq("to_do")
+          expect(activity.to_status).to eq("done")
         end
       end
 
-      it "does not move the task when status is invalid" do
-        patch move_project_task_path(project, task),
-              params: { task: { status: "archived" } },
-              as: :json
+      it "does not move the task or create activity when status is invalid" do
+        expect do
+          patch move_project_task_path(project, task),
+                params: { task: { status: "archived" } },
+                as: :json
+        end.not_to change(TaskActivity, :count)
 
         body = response.parsed_body
 
@@ -375,10 +388,12 @@ RSpec.describe "Tasks" do
         end
       end
 
-      it "does not move a task from another project even when project_id belongs to the user" do
-        patch move_project_task_path(project, other_task),
-              params: { task: { status: "done" } },
-              as: :json
+      it "does not move a task from another project or create activity even when project_id belongs to the user" do
+        expect do
+          patch move_project_task_path(project, other_task),
+                params: { task: { status: "done" } },
+                as: :json
+        end.not_to change(TaskActivity, :count)
 
         aggregate_failures do
           expect(other_task.reload).to be_to_do
@@ -397,10 +412,12 @@ RSpec.describe "Tasks" do
         sign_in user
       end
 
-      it "does not move the task" do
-        patch move_project_task_path(other_project, task),
-              params: { task: { status: "done" } },
-              as: :json
+      it "does not move the task or create activity" do
+        expect do
+          patch move_project_task_path(other_project, task),
+                params: { task: { status: "done" } },
+                as: :json
+        end.not_to change(TaskActivity, :count)
 
         aggregate_failures do
           expect(task.reload).to be_to_do
