@@ -17,11 +17,24 @@ module Tasks
     def call
       return failure(error_code: :invalid_status) unless valid_status?
 
-      task.status = new_status
+      from_status = task.status
+      return success if from_status == new_status
 
-      return success if task.save
+      ActiveRecord::Base.transaction do
+        task.update!(status: new_status)
 
-      failure(error_code: :validation_failed, errors: task.errors.full_messages)
+        task.task_activities.create!(
+          user: actor,
+          project: task.project,
+          action: TaskActivity::ACTION_MOVED,
+          from_status:,
+          to_status: new_status
+        )
+      end
+
+      success
+    rescue ActiveRecord::RecordInvalid => e
+      failure(error_code: e.record.errors.full_messages)
     end
 
     private

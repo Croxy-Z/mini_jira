@@ -16,6 +16,21 @@ RSpec.describe Tasks::Move do
         expect { result }.to change { task.reload.status }.from("to_do").to("done")
       end
 
+      it "creates task activity" do
+        expect { result }.to change(TaskActivity, :count).by(1)
+
+        activity = TaskActivity.last
+
+        aggregate_failures do
+          expect(activity.user).to eq(actor)
+          expect(activity.project).to eq(project)
+          expect(activity.task).to eq(task)
+          expect(activity.action).to eq(TaskActivity::ACTION_MOVED)
+          expect(activity.from_status).to eq("to_do")
+          expect(activity.to_status).to eq("done")
+        end
+      end
+
       it "returns a successful result" do
         aggregate_failures do
           expect(result).to be_success
@@ -33,6 +48,10 @@ RSpec.describe Tasks::Move do
         expect { result }.not_to(change { task.reload.status })
       end
 
+      it "does not create task activity" do
+        expect { result }.not_to change(TaskActivity, :count)
+      end
+
       it "returns an invalid status error" do
         aggregate_failures do
           expect(result).not_to be_success
@@ -40,6 +59,18 @@ RSpec.describe Tasks::Move do
           expect(result.error_code).to eq(:invalid_status)
           expect(result.errors).to be_empty
         end
+      end
+    end
+
+    context "when status does not change" do
+      let(:new_status) { "to_do" }
+
+      it "does not create task activity" do
+        expect { result }.not_to change(TaskActivity, :count)
+      end
+
+      it "returns success" do
+        expect(result).to be_success
       end
     end
   end
