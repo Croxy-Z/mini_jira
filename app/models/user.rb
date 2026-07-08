@@ -7,6 +7,7 @@ class User < ApplicationRecord
   enum :role, { user: 0, admin: 2 }
 
   has_many :projects, dependent: :destroy
+  has_many :task_activities, dependent: :destroy
 
   attr_accessor :skip_welcome_email
 
