@@ -4,9 +4,10 @@ require "rails_helper"
 
 RSpec.describe Tasks::Move do
   describe ".call" do
-    subject(:result) { described_class.call(task:, new_status:) }
+    subject(:result) { described_class.call(task:, actor:, new_status:) }
 
     let(:project) { create(:project) }
+    let(:actor) { project.user }
     let(:task) { create(:task, project:, status: :to_do) }
     let(:new_status) { "done" }
 

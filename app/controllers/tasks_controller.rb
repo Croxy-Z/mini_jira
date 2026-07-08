@@ -49,7 +49,7 @@ class TasksController < ApplicationController
   def move
     authorize @task
 
-    result = Tasks::Move.call(task: @task, new_status: task_move_params[:status])
+    result = Tasks::Move.call(task: @task, actor: current_user, new_status: task_move_params[:status])
 
     if result.success?
       render json: { status: result.task.status }, status: :ok

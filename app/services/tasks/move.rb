@@ -4,12 +4,13 @@ module Tasks
   class Move
     Result = Struct.new(:success?, :task, :error_code, :errors, keyword_init: true)
 
-    def self.call(task:, new_status:)
-      new(task:, new_status:).call
+    def self.call(task:, actor:, new_status:)
+      new(task:, actor:, new_status:).call
     end
 
-    def initialize(task:, new_status:)
+    def initialize(task:, actor:, new_status:)
       @task = task
+      @actor = actor
       @new_status = new_status.to_s
     end
 
@@ -25,7 +26,7 @@ module Tasks
 
     private
 
-    attr_reader :task, :new_status
+    attr_reader :task, :actor, :new_status
 
     def valid_status?
       Task.statuses.key?(new_status)
