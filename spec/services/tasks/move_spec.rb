@@ -51,6 +51,8 @@ RSpec.describe Tasks::Move do
 
         aggregate_failures do
           expect(result).not_to be_success
+          expect(result.error_code).to eq(:record_invalid)
+          expect(result.errors).to include("User must exist")
           expect(task.reload).to be_to_do
           expect(TaskActivity.exists?(task:)).to be(false)
         end
