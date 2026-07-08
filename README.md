@@ -2,7 +2,7 @@
 
 Mini Jira is a portfolio Ruby on Rails application inspired by Jira/Trello-style Kanban workflows.
 
-The goal of this project is not just to implement CRUD, but to demonstrate production-oriented backend and full-stack engineering practices: authentication, authorization, IDOR protection, service objects, request/system tests, Hotwire interactions, ViewComponents, PostgreSQL, Docker-based development, CI security checks, background jobs, and deployment readiness.
+The goal of this project is not just to implement CRUD, but to demonstrate production-oriented backend and full-stack engineering practices: authentication, authorization, IDOR protection, service objects, request/system tests, Hotwire interactions, ViewComponents, PostgreSQL, Docker-based development, CI security checks, background jobs, task movement audit trail, and deployment readiness.
 
 ## Demo preview
 
@@ -43,6 +43,7 @@ The goal of this project is not just to implement CRUD, but to demonstrate produ
 - Kanban-style task management
 - Hotwire/Turbo-powered modal interactions
 - Stimulus-powered task movement between Kanban columns
+- Task movement audit trail with actor and status transition history
 - ViewComponent-based UI decomposition
 - Service objects with explicit Result objects
 - PostgreSQL-backed application data
@@ -82,6 +83,7 @@ The goal of this project is not just to implement CRUD, but to demonstrate produ
 - Task details modal with full description preview
 - Turbo-powered task editing and deletion
 - Stimulus-powered task movement between columns
+- Task activity history in the task details modal
 - Flash messages with manual dismiss and auto-dismiss behavior
 - Server-side authorization for project and task access
 - JSON contract for task movement endpoint
@@ -98,6 +100,7 @@ This project intentionally keeps the architecture simple, but separates responsi
 - Pundit policies and policy scopes protect user-owned resources and reduce IDOR risk.
 - Service objects are used for business operations that may grow later, such as project creation, task creation, and task movement.
 - Result objects make service outcomes explicit and easier to test without relying on controller state.
+- Task movement audit records are created inside the `Tasks::Move` service, keeping the status update and audit event in one database transaction.
 - ViewComponents are used for reusable UI pieces where extracting markup improves readability.
 - Hotwire/Turbo is used for modal-based task interactions without introducing a separate frontend framework.
 - Stimulus is used only where client-side behavior is needed, such as moving tasks between Kanban columns and dismissing flash messages.
@@ -141,6 +144,7 @@ The application protects user data through:
 - Devise authentication
 - Pundit authorization policies
 - Policy scopes for user-owned records
+- Audit activity access through Pundit policy scopes
 - Nested resource lookup to reduce IDOR risk
 - Strong parameters to prevent mass assignment
 - Database constraints for authorization-sensitive fields
@@ -156,6 +160,7 @@ Examples of protected scenarios:
 - A user cannot create a project for another user through forged `user_id` params.
 - A user cannot update, delete, or move tasks from a project they do not own.
 - A user cannot assign unsafe task attributes through forged form params.
+- A user cannot view task activity records from another user's project.
 
 ## Local development
 
