@@ -6,6 +6,8 @@ class TasksController < ApplicationController
 
   def show
     authorize @task
+
+    @task_activities = policy_scope(TaskActivity).where(task: @task).includes(:user).order(created_at: :desc).limit(10)
   end
 
   def new
