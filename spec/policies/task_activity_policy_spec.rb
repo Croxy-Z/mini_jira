@@ -36,9 +36,13 @@ RSpec.describe TaskActivityPolicy do
   describe "Scope" do
     subject(:resolved_scope) { described_class::Scope.new(user, TaskActivity).resolve }
 
-    let(:own_project) { create(:project, user:) }
+    let(:project_owner) { create(:user) }
+
+    let(:own_project) { create(:project, user: project_owner) }
     let(:own_task) { create(:task, project: own_project) }
-    let!(:own_activity) { create(:task_activity, task: own_task, project: own_project, user:) }
+    let!(:own_activity) do
+      create(:task_activity, task: own_task, project: own_project, user: project_owner)
+    end
 
     let(:other_project) { create(:project) }
     let(:other_task) { create(:task, project: other_project) }
@@ -47,7 +51,7 @@ RSpec.describe TaskActivityPolicy do
     end
 
     context "when user is a regular user" do
-      let(:user) { create(:user) }
+      let(:user) { project_owner }
 
       it "returns only activities from user's projects" do
         expect(resolved_scope).to contain_exactly(own_activity)
@@ -59,6 +63,14 @@ RSpec.describe TaskActivityPolicy do
 
       it "returns all activities" do
         expect(resolved_scope).to contain_exactly(own_activity, other_activity)
+      end
+    end
+
+    context "when user is nil" do
+      let(:user) { nil }
+
+      it "returns no activities" do
+        expect(resolved_scope).to be_empty
       end
     end
   end

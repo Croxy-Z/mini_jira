@@ -27,7 +27,7 @@ module Tasks
 
       success
     rescue ActiveRecord::RecordInvalid => e
-      failure(error_code: e.record.errors.full_messages)
+      failure(error_code: :record_invalid, errors: e.record.errors.full_messages)
     end
 
     private

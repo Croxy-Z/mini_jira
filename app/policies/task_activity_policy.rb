@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TaskActivityPolicy < ApplicationPolicy
-  class Scope < Scope
+  class Scope < ApplicationPolicy::Scope
     def resolve
       return scope.none unless user
       return scope.all if user.admin?
@@ -11,6 +11,6 @@ class TaskActivityPolicy < ApplicationPolicy
   end
 
   def show?
-    user.admin? || record.project.user_id == user.id
+    user.present? && (user.admin? || record.project.user_id == user.id)
   end
 end

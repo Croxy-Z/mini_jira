@@ -231,6 +231,7 @@ RSpec.describe "Projects" do
 
     context "when user owns the project" do
       let(:user) { create(:user) }
+      let(:other_user) { create(:user) }
       let(:project) { create(:project, user:, title: "Old title") }
 
       before do
@@ -243,6 +244,23 @@ RSpec.describe "Projects" do
 
         aggregate_failures do
           expect(project.reload.title).to eq("Updated title")
+          expect(response).to redirect_to(project_path(project))
+        end
+      end
+
+      it "does not change the project owner when user_id param is provided" do
+        patch project_path(project),
+              params: {
+                project: {
+                  title: "Updated title",
+                  description: project.description,
+                  user_id: other_user.id
+                }
+              }
+
+        aggregate_failures do
+          expect(project.reload.title).to eq("Updated title")
+          expect(project.user).to eq(user)
           expect(response).to redirect_to(project_path(project))
         end
       end
