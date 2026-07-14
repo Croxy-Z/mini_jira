@@ -31,10 +31,13 @@ RSpec.describe "Dashboard" do
     end
 
     context "when user is unauthenticated" do
-      it "redirects to the sign in page" do
+      it "redirects to the sign in page without an authentication alert" do
         get root_path
 
-        expect(response).to redirect_to(new_user_session_path)
+        aggregate_failures do
+          expect(response).to redirect_to(new_user_session_path)
+          expect(flash[:alert]).to be_blank
+        end
       end
     end
   end
