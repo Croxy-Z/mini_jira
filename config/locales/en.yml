@@ -33,7 +33,7 @@ en:
 
   user_mailer:
     welcome_email:
-      subject: "Welcome to Jira Clone!"
+      subject: "Welcome to Mini Jira!"
 
   tasks:
     create:
