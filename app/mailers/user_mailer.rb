@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UserMailer < ApplicationMailer
-  default from: "no-reply@mini-jira.com"
+  default from: "onboarding@resend.dev"
 
   def welcome_email(user)
     @user = user
