@@ -4,6 +4,8 @@ Mini Jira is a production-oriented Ruby on Rails 8 portfolio application inspire
 
 It demonstrates secure multi-user resource handling, Hotwire interactions, PostgreSQL-backed background jobs, audit logging, automated testing, Docker-based development, CI, and deployment readiness.
 
+[![CI](https://github.com/Croxy-Z/mini_jira/actions/workflows/ci.yml/badge.svg)](https://github.com/Croxy-Z/mini_jira/actions/workflows/ci.yml)
+
 ## Live demo
 
 **URL:** https://mini-jira-81ci.onrender.com
