@@ -89,4 +89,4 @@ group :test do
   gem "simplecov", require: false
 end
 
-gem "tailwindcss-rails", "~> 4.4"
+gem "tailwindcss-rails", "~> 4.6"
