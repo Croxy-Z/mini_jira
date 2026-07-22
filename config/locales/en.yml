@@ -53,3 +53,7 @@ en:
     index:
       new_project: "New Project"
       title: "Projects"
+  
+  users:
+    registrations:
+      demo_account_protected: "Demo account settings are protected."
