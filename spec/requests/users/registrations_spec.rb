@@ -29,7 +29,9 @@ RSpec.describe "User registrations" do
         }
 
         expect(response).to redirect_to(authenticated_root_path)
-        expect(flash[:alert]).to eq("Demo account settings are protected.")
+        expect(flash[:alert]).to eq(
+          I18n.t("users.registrations.demo_account_protected")
+        )
       end
     end
 
@@ -58,16 +60,18 @@ RSpec.describe "User registrations" do
       before { sign_in user }
 
       it "does not delete the account" do
-        expect {
+        expect do
           delete user_registration_path
-        }.not_to change(User, :count)
+        end.not_to change(User, :count)
       end
 
       it "redirects with an alert" do
         delete user_registration_path
 
         expect(response).to redirect_to(authenticated_root_path)
-        expect(flash[:alert]).to eq("Demo account settings are protected.")
+        expect(flash[:alert]).to eq(
+          I18n.t("users.registrations.demo_account_protected")
+        )
       end
     end
 
@@ -77,9 +81,9 @@ RSpec.describe "User registrations" do
       before { sign_in user }
 
       it "deletes the account" do
-        expect {
+        expect do
           delete user_registration_path
-        }.to change(User, :count).by(-1)
+        end.to change(User, :count).by(-1)
       end
     end
   end

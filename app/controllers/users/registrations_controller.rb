@@ -2,7 +2,9 @@
 
 module Users
   class RegistrationsController < Devise::RegistrationsController
+    # rubocop:disable Rails/LexicallyScopedActionFilter
     before_action :protect_demo_account!, only: %i[update destroy]
+    # rubocop:enable Rails/LexicallyScopedActionFilter
 
     private
 
@@ -10,7 +12,7 @@ module Users
       return unless current_user&.demo_account?
 
       redirect_to authenticated_root_path,
-                  alert: "Demo account settings are protected."
+                  alert: t("users.registrations.demo_account_protected")
     end
   end
 end
